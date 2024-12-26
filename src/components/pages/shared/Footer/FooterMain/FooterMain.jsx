@@ -1,6 +1,6 @@
+import FooterBottom from "../FooterBottom/FooterBottom";
+import FooterMiddle from "../FooterMiddle/FooterMiddle";
 import FooterTop from "../FooterTop/FooterTop";
-import FooterBottom from "./FooterBottom";
-import FooterMiddle from "./FooterMiddle";
 
 const FooterMain = () => {
   return (
