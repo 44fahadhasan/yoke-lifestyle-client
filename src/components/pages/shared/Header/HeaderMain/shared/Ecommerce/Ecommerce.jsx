@@ -54,7 +54,7 @@ const Ecommerce = ({ foreground }) => {
           "bg-[#3c5873] hover:bg-[#2e4e6c] text-primary-foreground"
         }`}
       >
-        <CircleUserRound />
+        <CircleUserRound className="hidden sm:flex" />
         Login
       </Button>
     </div>
