@@ -6,17 +6,28 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 
 const Banner = () => {
   return (
-    <Carousel className="w-full h-[600px]">
-      <CarouselContent className="h-[600px]">
+    <Carousel
+      opts={{
+        loop: true,
+      }}
+      plugins={[
+        Autoplay({
+          delay: 3000,
+        }),
+      ]}
+      className="w-full h-[700px]"
+    >
+      <CarouselContent className="h-[700px]">
         {Array.from({ length: 6 }).map((_, index) => (
           <CarouselItem key={index}>
             <div>
-              <Card className="border-none h-[600px]">
-                <CardContent className="h-[600px]">
+              <Card className="border-none h-[700px]">
+                <CardContent className="h-[700px]">
                   <Image
                     fill
                     src={"https://i.ibb.co.com/nPX6Gw8/Web-banner-1.jpg"}
