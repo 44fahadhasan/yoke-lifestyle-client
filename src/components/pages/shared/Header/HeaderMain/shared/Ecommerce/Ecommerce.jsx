@@ -1,6 +1,7 @@
 import TypographySmall from "@/components/reusable/Typography/TypographySmall";
 import { Button } from "@/components/ui/button";
 import { CircleUserRound, Heart, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 
 const Ecommerce = ({ foreground }) => {
   return (
@@ -48,15 +49,17 @@ const Ecommerce = ({ foreground }) => {
       </div>
 
       {/* login */}
-      <Button
-        className={`font-semibold ${
-          foreground &&
-          "bg-[#3c5873] hover:bg-[#2e4e6c] text-primary-foreground"
-        }`}
-      >
-        <CircleUserRound className="hidden sm:flex" />
-        Login
-      </Button>
+      <Link href={"/login"}>
+        <Button
+          className={`font-semibold ${
+            foreground &&
+            "bg-[#3c5873] hover:bg-[#2e4e6c] text-primary-foreground"
+          }`}
+        >
+          <CircleUserRound className="hidden sm:flex" />
+          Login
+        </Button>
+      </Link>
     </div>
   );
 };
