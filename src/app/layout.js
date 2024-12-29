@@ -27,7 +27,9 @@ export default function RootLayout({ children }) {
         {/* header */}
         <Header />
 
-        <main>{children}</main>
+        <main className="mt-[65px] xs:mt-[73px] md:mt-[81px] lg:mt-0">
+          {children}
+        </main>
 
         {/* footer */}
         <Footer />
