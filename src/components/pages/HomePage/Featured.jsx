@@ -1,10 +1,13 @@
 import Container from "@/components/reusable/Container";
+import TypographyH2 from "@/components/reusable/Typography/TypographyH2";
 import Image from "next/image";
 
 const Featured = () => {
   return (
     <Container>
-      <div className="flex relative gap-5">
+      <TypographyH2 className={"text-center"}>Featured</TypographyH2>
+
+      <div className="flex relative gap-5 mt-10">
         <div className="basis-1/2 h-screen bg-[#EFEFEF] top-[100px] sticky">
           <div className="flex justify-center items-center h-screen">
             <Image
