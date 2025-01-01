@@ -1,12 +1,11 @@
 import LoginForm from "@/components/pages/LoginPage/LoginForm";
+import Container from "@/components/reusable/Container";
 
 const LoginPage = () => {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <LoginForm />
-      </div>
-    </div>
+    <Container className="flex min-h-svh flex-col items-center justify-center py-6 lg:py-10">
+      <LoginForm />
+    </Container>
   );
 };
 
