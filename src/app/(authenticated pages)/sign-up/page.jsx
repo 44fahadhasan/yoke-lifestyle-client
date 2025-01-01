@@ -1,12 +1,11 @@
 import SingupForm from "@/components/pages/SignupPage/SingupForm";
+import Container from "@/components/reusable/Container";
 
 const SingupPage = () => {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <SingupForm />
-      </div>
-    </div>
+    <Container className="flex min-h-svh flex-col items-center justify-center py-6 lg:py-10">
+      <SingupForm />
+    </Container>
   );
 };
 
