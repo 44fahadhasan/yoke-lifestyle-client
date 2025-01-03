@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { toast } from "sonner";
-import SocialLogin from "./SocialLogin";
+// import SocialLogin from "./SocialLogin";
 
 const LoginForm = () => {
   const [loading, setLoading] = useState(false);
@@ -46,8 +46,12 @@ const LoginForm = () => {
         "/api/users/login",
         userCredentials
       );
+
       if (data.success) {
         toast.success(data.message);
+
+        // user data save to local storage
+        localStorage.setItem("userData", JSON.stringify(data.data));
       }
     } catch ({ response }) {
       toast.error(response.data.message);
@@ -67,22 +71,23 @@ const LoginForm = () => {
           <CardHeader className="text-center">
             <CardTitle className="text-xl">Welcome back</CardTitle>
             <CardDescription>
-              Login with your Facebook or Google account
+              Login with your credentials
+              {/* your Facebook or Google account */}
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             {/* login by socials platform */}
-            <div className="space-y-6 mb-6">
-              <SocialLogin />
+            {/* <div className="space-y-6 mb-6">
+              <SocialLogin /> */}
 
-              {/* divider */}
-              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+            {/* divider */}
+            {/* <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
-            </div>
+            </div> */}
 
             {/* login by credentials */}
             <form onSubmit={handleSubmit(onSubmit)}>

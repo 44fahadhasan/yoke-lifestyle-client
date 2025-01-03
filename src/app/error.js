@@ -1,23 +1,25 @@
 "use client";
+import Container from "@/components/reusable/Container";
+import TypographyH2 from "@/components/reusable/Typography/TypographyH2";
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
-export default function Error({ error, reset }) {
+const ErrorPage = ({ error, reset }) => {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
+    console.error({ error });
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </div>
+    <Container className={"flex justify-center"}>
+      <div className="space-y-3">
+        <TypographyH2>Something went wrong!</TypographyH2>
+
+        <Button variant="outline" onClick={() => reset()}>
+          Try again
+        </Button>
+      </div>
+    </Container>
   );
-}
+};
+
+export default ErrorPage;

@@ -1,5 +1,5 @@
-const sizeAndabricPage = () => {
-  return <div>sizeAndabricPage</div>;
+const SizeAndabricPage = () => {
+  return <div>SizeAndabricPage</div>;
 };
 
-export default sizeAndabricPage;
+export default SizeAndabricPage;

@@ -1,5 +1,5 @@
-const termsAndConditionsPage = () => {
-  return <div>termsAndConditionsPage</div>;
+const TermsAndConditionsPage = () => {
+  return <div>TermsAndConditionsPage</div>;
 };
 
-export default termsAndConditionsPage;
+export default TermsAndConditionsPage;

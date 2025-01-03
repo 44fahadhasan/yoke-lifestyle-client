@@ -1,5 +1,5 @@
-const deliveryAndReturnsPage = () => {
-  return <div>deliveryAndReturnsPage</div>;
+const DeliveryAndReturnsPage = () => {
+  return <div>DeliveryAndReturnsPage</div>;
 };
 
-export default deliveryAndReturnsPage;
+export default DeliveryAndReturnsPage;

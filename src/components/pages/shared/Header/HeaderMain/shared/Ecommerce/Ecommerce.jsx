@@ -1,9 +1,13 @@
 import TypographySmall from "@/components/reusable/Typography/TypographySmall";
 import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
 import { CircleUserRound, Heart, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import DropdownMenuProfile from "../DropdownMenu/DropdownMenuProfile";
 
 const Ecommerce = ({ foreground }) => {
+  const { auth } = useAuth();
+
   return (
     <div className="flex items-center sm:space-x-8 space-x-6">
       {/* wishlist */}
@@ -48,18 +52,27 @@ const Ecommerce = ({ foreground }) => {
         </TypographySmall>
       </div>
 
-      {/* login */}
-      <Link href={"/login"}>
-        <Button
-          className={`font-semibold ${
-            foreground &&
-            "bg-[#3c5873] hover:bg-[#2e4e6c] text-primary-foreground"
-          }`}
-        >
-          <CircleUserRound className="hidden sm:flex" />
-          Login
-        </Button>
-      </Link>
+      {auth ? (
+        <>
+          {/* user profile nav */}
+          <DropdownMenuProfile />
+        </>
+      ) : (
+        <>
+          {/* login button */}
+          <Link href={"/login"}>
+            <Button
+              className={`font-semibold ${
+                foreground &&
+                "bg-[#3c5873] hover:bg-[#2e4e6c] text-primary-foreground"
+              }`}
+            >
+              <CircleUserRound className="hidden sm:flex" />
+              Login
+            </Button>
+          </Link>
+        </>
+      )}
     </div>
   );
 };

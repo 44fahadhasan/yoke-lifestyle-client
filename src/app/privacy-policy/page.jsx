@@ -1,5 +1,5 @@
-const privacyPolicyPage = () => {
-  return <div>privacyPolicyPage</div>;
+const PrivacyPolicyPage = () => {
+  return <div>PrivacyPolicyPage</div>;
 };
 
-export default privacyPolicyPage;
+export default PrivacyPolicyPage;

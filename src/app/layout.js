@@ -2,6 +2,7 @@ import Footer from "@/components/pages/shared/Footer/Footer";
 import Header from "@/components/pages/shared/Header/Header";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
+import AuthProvider from "@/contexts/AuthProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -26,18 +27,20 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* header */}
-        <Header />
+        <AuthProvider>
+          {/* header */}
+          <Header />
 
-        <main className="bg-muted mt-[65px] xs:mt-[73px] md:mt-[81px] lg:mt-0">
-          {children}
-        </main>
+          <main className="bg-muted mt-[65px] xs:mt-[73px] md:mt-[81px] lg:mt-0">
+            {children}
+          </main>
 
-        <Toaster />
-        <SonnerToaster position="top-center" />
+          <Toaster />
+          <SonnerToaster position="top-center" />
 
-        {/* footer */}
-        <Footer />
+          {/* footer */}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
