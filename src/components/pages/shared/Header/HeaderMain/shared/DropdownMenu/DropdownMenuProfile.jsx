@@ -10,7 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/hooks/useAuth";
-import { CircleUserRound, LayoutDashboard, LogOut } from "lucide-react";
+import {
+  CircleUserRound,
+  LayoutDashboard,
+  LogOut,
+  Package2,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -51,6 +56,15 @@ const DropdownMenuProfile = () => {
               My Profile
               <DropdownMenuShortcut>
                 <CircleUserRound size={16} />
+              </DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </Link>
+
+          <Link href={"/my-orders"}>
+            <DropdownMenuItem>
+              My Orders
+              <DropdownMenuShortcut>
+                <Package2 size={16} />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
           </Link>

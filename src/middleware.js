@@ -28,8 +28,8 @@ export function middleware(req) {
 
     // allow access to user routes only for authenticated users
     if (
-      pathname.startsWith("/my-profile") &&
-      !["user", "admin"].includes(role)
+      pathname.startsWith("/my-profile") ||
+      (pathname.startsWith("/my-orders") && !["user", "admin"].includes(role))
     ) {
       return NextResponse.redirect(new URL("/not-found", req.url));
     }
@@ -45,5 +45,5 @@ export function middleware(req) {
 // define which routes the middleware should be execute
 // matcher configuration
 export const config = {
-  matcher: ["/my-profile", "/dashboard/:path*"],
+  matcher: ["/my-profile", "/my-orders", "/dashboard/:path*"],
 };
