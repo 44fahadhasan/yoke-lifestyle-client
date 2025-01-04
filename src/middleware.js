@@ -27,9 +27,11 @@ export function middleware(req) {
     }
 
     // allow access to user routes only for authenticated users
+    const protectedPaths = ["/my-profile", "/my-orders"];
+
     if (
-      pathname.startsWith("/my-profile") ||
-      (pathname.startsWith("/my-orders") && !["user", "admin"].includes(role))
+      protectedPaths.some((path) => pathname.startsWith(path)) &&
+      !["user", "admin"].includes(role)
     ) {
       return NextResponse.redirect(new URL("/not-found", req.url));
     }
