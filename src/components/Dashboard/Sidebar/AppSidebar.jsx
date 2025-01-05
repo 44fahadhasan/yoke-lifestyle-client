@@ -6,7 +6,14 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { CirclePlus, HousePlus, LayoutDashboard, Settings } from "lucide-react";
+import {
+  CirclePlus,
+  HousePlus,
+  LayoutDashboard,
+  ReceiptText,
+  Settings,
+  SquareChartGantt,
+} from "lucide-react";
 
 import NavMain from "./NavMain";
 import NavOthers from "./NavOthers";
@@ -28,14 +35,37 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Categories",
+          title: "Mange Categories",
           url: "/dashboard/categories",
           icon: CirclePlus,
         },
         {
-          title: "Tags",
+          title: "Mange Tags",
           url: "/dashboard/tags",
           icon: CirclePlus,
+        },
+      ],
+    },
+
+    {
+      title: "Products",
+      icon: SquareChartGantt,
+      isActive: true,
+      items: [
+        {
+          title: "Mange Attributes",
+          url: "/dashboard/attributes",
+          icon: CirclePlus,
+        },
+        {
+          title: "Add Product",
+          url: "/dashboard/add-product",
+          icon: CirclePlus,
+        },
+        {
+          title: "All Product",
+          url: "/dashboard/all-product",
+          icon: ReceiptText,
         },
       ],
     },
