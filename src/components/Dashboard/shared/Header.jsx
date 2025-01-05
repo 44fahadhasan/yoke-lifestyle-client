@@ -34,7 +34,7 @@ const Header = () => {
               return (
                 <BreadcrumbItem
                   key={index}
-                  className="inline-flex items-center capitalize"
+                  className="hidden md:inline-flex items-center capitalize"
                 >
                   {isLastPath ? (
                     // current page without link
