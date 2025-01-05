@@ -7,12 +7,13 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-  CirclePlus,
+  ChartBarStacked,
   HousePlus,
-  Info,
   LayoutDashboard,
   Settings,
   SquareChartGantt,
+  TableProperties,
+  Tags,
 } from "lucide-react";
 import { MdOutlinePostAdd } from "react-icons/md";
 import NavMain from "./NavMain";
@@ -35,14 +36,14 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Mange Categories",
+          title: "Categories",
           url: "/dashboard/categories",
-          icon: CirclePlus,
+          icon: ChartBarStacked,
         },
         {
-          title: "Mange Tags",
+          title: "Tags",
           url: "/dashboard/tags",
-          icon: CirclePlus,
+          icon: Tags,
         },
       ],
     },
@@ -53,26 +54,13 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Mange Attributes",
+          title: "Attributes",
           url: "/dashboard/attributes",
-          icon: CirclePlus,
+          icon: TableProperties,
         },
         {
-          title: "Add Product",
-          url: "/dashboard/add-product",
-          icon: CirclePlus,
-        },
-      ],
-    },
-
-    {
-      title: "Info",
-      icon: Info,
-      isActive: true,
-      items: [
-        {
-          title: "All Product",
-          url: "/dashboard/all-product",
+          title: "Products",
+          url: "/dashboard/products",
           icon: SquareChartGantt,
         },
       ],
