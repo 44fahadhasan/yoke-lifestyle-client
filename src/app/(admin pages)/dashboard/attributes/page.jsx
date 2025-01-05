@@ -1,5 +1,5 @@
-const AttributesManagePage = () => {
-  return <div>AttributesManagePage</div>;
+const AllAttributesPage = () => {
+  return <div>All Attributes</div>;
 };
 
-export default AttributesManagePage;
+export default AllAttributesPage;

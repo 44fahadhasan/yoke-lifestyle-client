@@ -1,5 +1,5 @@
-const TagsManagePage = () => {
-  return <div>TagsManagePage</div>;
+const AllTagsPage = () => {
+  return <div>AllTags</div>;
 };
 
-export default TagsManagePage;
+export default AllTagsPage;

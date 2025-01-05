@@ -1,5 +1,5 @@
-const CategoriesManagePage = () => {
-  return <div>CategoriesManagePage</div>;
+const AllCategoriesPage = () => {
+  return <div>All Categories</div>;
 };
 
-export default CategoriesManagePage;
+export default AllCategoriesPage;
