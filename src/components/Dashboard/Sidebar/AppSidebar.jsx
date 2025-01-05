@@ -9,12 +9,12 @@ import {
 import {
   CirclePlus,
   HousePlus,
+  Info,
   LayoutDashboard,
-  ReceiptText,
   Settings,
   SquareChartGantt,
 } from "lucide-react";
-
+import { MdOutlinePostAdd } from "react-icons/md";
 import NavMain from "./NavMain";
 import NavOthers from "./NavOthers";
 import NavUser from "./NavUser";
@@ -48,8 +48,8 @@ const data = {
     },
 
     {
-      title: "Products",
-      icon: SquareChartGantt,
+      title: "Post",
+      icon: MdOutlinePostAdd,
       isActive: true,
       items: [
         {
@@ -62,10 +62,18 @@ const data = {
           url: "/dashboard/add-product",
           icon: CirclePlus,
         },
+      ],
+    },
+
+    {
+      title: "Info",
+      icon: Info,
+      isActive: true,
+      items: [
         {
           title: "All Product",
           url: "/dashboard/all-product",
-          icon: ReceiptText,
+          icon: SquareChartGantt,
         },
       ],
     },
