@@ -14,28 +14,47 @@ import { usePathname } from "next/navigation";
 const Header = () => {
   const pathname = usePathname();
 
-  console.log(pathname);
+  // split path and without empty string
+  const pathSegments = pathname.split("/").filter(Boolean);
 
   return (
-    <header className="border flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-      <div className="flex items-center gap-2 px-4">
-        {/* trigger button */}
+    <header className="border flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <div className="flex items-center gap-2">
+        {/* sidebar trigger button */}
         <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4" />
+        <Separator orientation="vertical" className="h-4" />
 
-        {/* breadcrumb */}
+        {/* breadcrumb navigation */}
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">
-                Building Your Application
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
+            {pathSegments.map((segment, index) => {
+              const isLastPath = index === pathSegments.length - 1;
+              const href = "/" + pathSegments.slice(0, index + 1).join("/");
 
-            <BreadcrumbItem>
-              <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-            </BreadcrumbItem>
+              return (
+                <BreadcrumbItem
+                  key={index}
+                  className="inline-flex items-center capitalize"
+                >
+                  {isLastPath ? (
+                    // current page without link
+                    <BreadcrumbPage>
+                      {segment.replace(/-/g, " ")}
+                    </BreadcrumbPage>
+                  ) : (
+                    // breadcrumb link
+                    <BreadcrumbLink href={href}>
+                      {segment.replace(/-/g, " ")}
+                    </BreadcrumbLink>
+                  )}
+
+                  {/* separator for all without last path */}
+                  {isLastPath || (
+                    <BreadcrumbSeparator className="hidden md:block" />
+                  )}
+                </BreadcrumbItem>
+              );
+            })}
           </BreadcrumbList>
         </Breadcrumb>
       </div>
