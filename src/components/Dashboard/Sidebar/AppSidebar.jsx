@@ -6,133 +6,46 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  BookOpen,
-  Bot,
-  Frame,
-  LayoutDashboard,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { CirclePlus, HousePlus, LayoutDashboard, Settings } from "lucide-react";
 
 import NavMain from "./NavMain";
-import NavProjects from "./NavProjects";
+import NavOthers from "./NavOthers";
 import NavUser from "./NavUser";
 import SidebarLogo from "./SidebarLogo";
 
-// This is sample data.
+// data of sidebar
 const data = {
   header: {
     title: "Dashboard",
     logo: LayoutDashboard,
-    sub_title: "Yoke life style",
+    sub_title: "Yoke Lifestyle",
   },
 
-  navMain: [
+  nav_main: [
     {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Texonomy",
+      icon: Settings,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Categories",
+          url: "/dashboard/categories",
+          icon: CirclePlus,
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Tags",
+          url: "/dashboard/tags",
+          icon: CirclePlus,
         },
       ],
     },
   ],
 
-  projects: [
+  nav_others: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Home",
+      url: "/",
+      icon: HousePlus,
     },
   ],
 };
@@ -147,8 +60,8 @@ const AppSidebar = (props) => {
 
       {/* main content of sidebar */}
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={data.nav_main} />
+        <NavOthers items={data.nav_others} />
       </SidebarContent>
 
       {/* footer of sidebar */}

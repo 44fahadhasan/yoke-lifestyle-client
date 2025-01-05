@@ -8,12 +8,14 @@ export default function DashboardLayout({ children }) {
     <SidebarProvider>
       {/* sidebar */}
       <AppSidebar />
-      
+
       <SidebarInset>
         {/* header */}
         <Header />
 
-        <main className="min-h-[calc(100vh-495.36px)]">{children}</main>
+        <main className="p-5 bg-muted min-h-[calc(100vh-125px)]">
+          {children}
+        </main>
 
         {/* footer */}
         <Footer />

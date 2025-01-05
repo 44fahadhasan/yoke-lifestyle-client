@@ -41,7 +41,7 @@ const FooterBottom = () => {
         <TypographySmall
           className={"text-xs text-primary-foreground font-light"}
         >
-          Copyright © ${new Date().getFullYear()}.
+          Copyright © {new Date().getFullYear()}.
         </TypographySmall>
 
         <Link href={"https://www.blankspacer.com/"} target="_blank">

@@ -20,7 +20,7 @@ import Link from "next/link";
 const NavMain = ({ items }) => {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Products</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -30,6 +30,7 @@ const NavMain = ({ items }) => {
             className="group/collapsible"
           >
             <SidebarMenuItem>
+              {/* trigger button */}
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
@@ -44,6 +45,7 @@ const NavMain = ({ items }) => {
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <Link href={subItem.url}>
+                          {subItem.icon && <subItem.icon />}
                           <span>{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>
