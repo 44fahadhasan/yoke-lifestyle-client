@@ -14,7 +14,9 @@ export default function DashboardLayout({ children }) {
         {/* header */}
         <Header />
 
-        <main className="bg-muted min-h-[calc(100vh-125px)]">{children}</main>
+        <main className="bg-muted min-h-[calc(100vh-125px)] p-7">
+          {children}
+        </main>
 
         {/* footer */}
         <Footer />

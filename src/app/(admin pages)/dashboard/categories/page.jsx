@@ -1,6 +1,13 @@
 "use client";
-import TypographyH3 from "@/components/reusable/Typography/TypographyH3";
+import CategoriesTable from "@/components/Dashboard/Categories/AllCategoriesPage/CategoriesTable";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -8,8 +15,17 @@ const AllCategoriesPage = () => {
   const router = useRouter();
 
   return (
-    <section>
-      <div className="flex justify-around">
+    <Card>
+      <CardHeader className="flex flex-col gap-3 xs:flex-row justify-between">
+        {/* content */}
+        <div className="space-y-1.5">
+          <CardTitle className="sm:text-2xl">
+            Available Categories (0)
+          </CardTitle>
+          <CardDescription>Explore you published categories</CardDescription>
+        </div>
+
+        {/* add button */}
         <Button
           variant="outline"
           onClick={() => router.push("/dashboard/categories/add-categorie")}
@@ -17,10 +33,13 @@ const AllCategoriesPage = () => {
           <CirclePlus />
           Add New Categorie
         </Button>
+      </CardHeader>
 
-        <TypographyH3>(0) Categories Published</TypographyH3>
-      </div>
-    </section>
+      <CardContent>
+        {/* categories table */}
+        <CategoriesTable />
+      </CardContent>
+    </Card>
   );
 };
 
