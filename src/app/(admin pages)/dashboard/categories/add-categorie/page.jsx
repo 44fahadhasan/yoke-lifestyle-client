@@ -3,13 +3,13 @@ import ImagePicker from "@/components/Dashboard/HelperComponent/ImageManager/Ima
 import { useState } from "react";
 
 const AddCategoriePage = () => {
-  const [addedImageId, setAddedImageId] = useState(null);
+  const [addedImageValue, setAddedImageValue] = useState(null);
 
   return (
     <>
-      <div className="">{addedImageId}</div>
+      <div className="">{addedImageValue}</div>
 
-      <ImagePicker setAddedImageId={setAddedImageId} />
+      <ImagePicker setAddedImageValue={setAddedImageValue} />
     </>
   );
 };

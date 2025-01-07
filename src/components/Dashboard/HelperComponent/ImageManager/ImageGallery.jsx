@@ -7,42 +7,42 @@ import SingleImageOpen from "./SingleImageOpen";
 const images = [
   {
     _id: 1,
-    src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080",
-    alt: "Nature Image 1",
+    src: "1",
+    alt: "1",
   },
   {
     _id: 2,
-    src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080",
-    alt: "Nature Image 2",
+    src: "2",
+    alt: "2",
   },
   {
     _id: 3,
-    src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw1fHxuYXR1cmV8ZW58MHwwfHx8MTY5NDA5OTcyOXww&ixlib=rb-4.0.3&q=80&w=1080",
-    alt: "Nature Image 2",
+    src: "3",
+    alt: "3",
   },
 ];
 
-const ImageGallery = ({ isSelected, setIsSelected, setAddImageId }) => {
-  const [selectedImageId, setSelectedImageId] = useState(null);
+const ImageGallery = ({ isSelected, setIsSelected, setAddImageSrc }) => {
+  const [selectedImageInfo, setSelectedImageInfo] = useState(null);
 
-  const handleImageClick = (id) => {
-    setSelectedImageId((prevId) => (prevId === id ? null : id));
+  const handleImageClick = (src) => {
+    setSelectedImageInfo((prevSrc) => (prevSrc === src ? null : src));
 
     setIsSelected(!isSelected);
   };
 
   useEffect(() => {
-    setAddImageId(selectedImageId);
-  }, [selectedImageId]);
+    setAddImageSrc(selectedImageInfo);
+  }, [selectedImageInfo]);
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {images.map(({ src, alt, _id }) => (
         <div
-          onClick={() => handleImageClick(_id)}
+          onClick={() => handleImageClick(src)}
           key={_id}
           className={`group relative ease-in-out duration-300 overflow-hidden rounded bg-muted border-2 ${
-            selectedImageId === _id ? "border-primary" : "border-transparent"
+            selectedImageInfo === src ? "border-primary" : "border-transparent"
           }`}
         >
           {/* image */}

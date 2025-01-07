@@ -18,13 +18,13 @@ import { useState } from "react";
 import ImageGallery from "./ImageGallery";
 import ImageUploader from "./ImageUploader";
 
-const ImagePicker = ({ setAddedImageId }) => {
+const ImagePicker = ({ setAddedImageValue }) => {
   const [isSelected, setIsSelected] = useState(false);
-  const [addImageId, setAddImageId] = useState(null);
+  const [addImageSrc, setAddImageSrc] = useState(null);
 
   // handle add img
   const handleAddImage = (value) => {
-    setAddedImageId(value);
+    setAddedImageValue(value);
   };
 
   return (
@@ -57,7 +57,7 @@ const ImagePicker = ({ setAddedImageId }) => {
             <div className="flex justify-end sticky top-0 z-50 bg-card py-2">
               <DialogClose disabled={!isSelected}>
                 <Button
-                  onClick={() => handleAddImage(addImageId)}
+                  onClick={() => handleAddImage(addImageSrc)}
                   variant="outline"
                 >
                   <CirclePlus />
@@ -68,7 +68,7 @@ const ImagePicker = ({ setAddedImageId }) => {
 
             {/* image gallery */}
             <ImageGallery
-              setAddImageId={setAddImageId}
+              setAddImageSrc={setAddImageSrc}
               isSelected={isSelected}
               setIsSelected={setIsSelected}
             />
