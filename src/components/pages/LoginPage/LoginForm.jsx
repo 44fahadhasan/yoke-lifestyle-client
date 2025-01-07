@@ -145,7 +145,11 @@ const LoginForm = () => {
 
                   {/* button */}
                   <Button disabled={loading} type="submit" className="w-full">
-                    {loading ? <LoadingButton>loading</LoadingButton> : "Login"}
+                    {loading ? (
+                      <LoadingButton>Please wait</LoadingButton>
+                    ) : (
+                      "Login"
+                    )}
                   </Button>
                 </div>
 

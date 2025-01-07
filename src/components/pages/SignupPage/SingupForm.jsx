@@ -304,7 +304,7 @@ const SingupForm = () => {
                   {/* button */}
                   <Button disabled={loading} type="submit" className="w-full">
                     {loading ? (
-                      <LoadingButton>loading</LoadingButton>
+                      <LoadingButton>Please wait</LoadingButton>
                     ) : (
                       "Sign Up"
                     )}

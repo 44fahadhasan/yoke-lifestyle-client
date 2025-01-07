@@ -22,7 +22,7 @@ const AllCategoriesPage = () => {
           <CardTitle className="sm:text-2xl">
             Available Categories (0)
           </CardTitle>
-          <CardDescription>Explore you published categories</CardDescription>
+          <CardDescription>Explore your published categories</CardDescription>
         </div>
 
         {/* add button */}
