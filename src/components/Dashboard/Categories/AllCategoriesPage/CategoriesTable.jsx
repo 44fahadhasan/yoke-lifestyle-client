@@ -41,7 +41,7 @@ const CategoriesTable = () => {
           <TableRow>
             <TableHead className="w-[100px]">Serial No.</TableHead>
             <TableHead>Categorie Name</TableHead>
-            <TableHead>Path Name</TableHead>
+            <TableHead>Slug Name</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -53,7 +53,7 @@ const CategoriesTable = () => {
             {/* categorie name */}
             <TableCell>Womens</TableCell>
 
-            {/* path */}
+            {/* slug */}
             <TableCell>womens</TableCell>
 
             {/* action */}

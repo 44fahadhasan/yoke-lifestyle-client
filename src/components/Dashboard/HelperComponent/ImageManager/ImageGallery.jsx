@@ -7,7 +7,7 @@ import SingleImageOpen from "./SingleImageOpen";
 const images = [
   {
     _id: 1,
-    src: "1",
+    src: "https://i.ibb.co.com/nPX6Gw8/Web-banner-1.jpg",
     alt: "1",
   },
   {
