@@ -59,6 +59,8 @@ const CategoryFrom = () => {
     },
   ]);
 
+  console.log("seo", { newInputSection });
+
   // from schema
   const formSchema = z.object({
     img_alt: z.string(),

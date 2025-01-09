@@ -6,13 +6,39 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Settings, Trash2 } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown, Plus, Settings, Trash2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
+const languages = [
+  { label: "English", value: "en" },
+  { label: "French", value: "fr" },
+  { label: "German", value: "de" },
+  { label: "Spanish", value: "es" },
+  { label: "Portuguese", value: "pt" },
+  { label: "Russian", value: "ru" },
+  { label: "Japanese", value: "ja" },
+  { label: "Korean", value: "ko" },
+  { label: "Chinese", value: "zh" },
+];
+
 const SEO = ({ newInputSection, setNewInputSection }) => {
-  // handle add a new section
+  // add a new section
   const handleAddNewSection = () => {
     setNewInputSection([
       ...newInputSection,
@@ -25,14 +51,14 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
     ]);
   };
 
-  // handle delete a section
+  // delete a section
   const handleDeleteSection = (sectionId) => {
     setNewInputSection(
       newInputSection.filter((section) => section.id !== sectionId)
     );
   };
 
-  // handle update a specific input field
+  // update a specific field in a section
   const handleUpdateSection = (id, field, value) => {
     setNewInputSection((prevSections) =>
       prevSections.map((section) =>
@@ -64,16 +90,60 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
               >
                 {/* name */}
                 <div className="col-span-3 w-full space-y-1">
-                  <Label htmlFor={`name-${section.id}`}>Name</Label>
-                  <Input
-                    type="text"
-                    id={`name-${section.id}`}
-                    className="bg-primary-foreground"
-                    placeholder='name="any"'
-                    onChange={(e) =>
-                      handleUpdateSection(section.id, "name", e.target.value)
-                    }
-                  />
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Name</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={`w-full flex justify-between hover:bg-primary-foreground ${
+                              !section.name && "text-muted-foreground"
+                            }`}
+                          >
+                            {section.name || "Select name"}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder="Search category..."
+                            className="h-9"
+                          />
+                          <CommandList>
+                            <CommandEmpty>No category found.</CommandEmpty>
+                            <CommandGroup>
+                              {languages.map((language) => (
+                                <CommandItem
+                                  key={language.value}
+                                  value={language.label}
+                                  onSelect={(value) =>
+                                    handleUpdateSection(
+                                      section.id,
+                                      "name",
+                                      value
+                                    )
+                                  }
+                                >
+                                  {language.label}
+                                  <Check
+                                    className={`ml-auto ${
+                                      section.name === language.label
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }`}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormItem>
                 </div>
 
                 {/* property */}
