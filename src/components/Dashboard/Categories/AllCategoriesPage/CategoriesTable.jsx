@@ -39,106 +39,31 @@ const CategoriesTable = () => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Serial No.</TableHead>
+            <TableHead className="w-[100px]">No.</TableHead>
             <TableHead>Categorie Name</TableHead>
-            <TableHead>Slug Name</TableHead>
+            <TableHead>Slug/path Name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Added Date</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
         </TableHeader>
 
         <TableBody>
           <TableRow>
+            {/* serial number */}
             <TableCell className="font-medium">01</TableCell>
 
             {/* categorie name */}
             <TableCell>Womens</TableCell>
 
-            {/* slug */}
+            {/* categorie slug/path */}
             <TableCell>womens</TableCell>
 
-            {/* action */}
-            <TableCell className="text-center">
-              <div className="flex gap-x-1 sm:gap-x-2 justify-center">
-                {/* edit */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/edit-categorie/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <FilePenLine size={16} />
-                </Button>
+            {/* status */}
+            <TableCell>Published</TableCell>
 
-                {/* details */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/details/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <Eye size={16} />
-                </Button>
-
-                {/* delete */}
-                <Button variant="destructive" className="px-1 sm:px-[6px]">
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell className="font-medium">01</TableCell>
-
-            {/* categorie name */}
-            <TableCell>Womens</TableCell>
-
-            {/* path */}
-            <TableCell>womens</TableCell>
-
-            {/* action */}
-            <TableCell className="text-center">
-              <div className="flex gap-x-1 sm:gap-x-2 justify-center">
-                {/* edit */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/edit-categorie/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <FilePenLine size={16} />
-                </Button>
-
-                {/* details */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/details/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <Eye size={16} />
-                </Button>
-
-                {/* delete */}
-                <Button variant="destructive" className="px-1 sm:px-[6px]">
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-
-          <TableRow>
-            <TableCell className="font-medium">01</TableCell>
-
-            {/* categorie name */}
-            <TableCell>Womens</TableCell>
-
-            {/* path */}
-            <TableCell>womens</TableCell>
+            {/* added date */}
+            <TableCell>10 Jan 2025</TableCell>
 
             {/* action */}
             <TableCell className="text-center">

@@ -31,9 +31,7 @@ export default function RootLayout({ children }) {
           {/* header */}
           <Header />
 
-          <main className="bg-muted mt-[65px] xs:mt-[73px] md:mt-[81px] lg:mt-0">
-            {children}
-          </main>
+          <main className="bg-muted">{children}</main>
 
           <Toaster />
           <SonnerToaster position="top-center" />

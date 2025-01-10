@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className="bg-muted flex items-center justify-center py-5 border-t">
+    <footer className="bg-muted flex flex-col xs:flex-row items-center justify-center py-5 border-t text-center">
       <TypographyMuted className={"font-light"}>
         Copyright © {new Date().getFullYear()} Yoke Lifestyle.
       </TypographyMuted>

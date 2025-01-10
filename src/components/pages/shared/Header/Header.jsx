@@ -8,7 +8,7 @@ const Header = () => {
   if (pathname.startsWith("/dashboard")) return null;
 
   return (
-    <header className="bg-background">
+    <header className="bg-background mb-[65px] xs:mb-[73px] md:mb-[81px] lg:mb-0">
       <HeaderMain />
     </header>
   );

@@ -26,6 +26,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,7 +40,6 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 const languages = [
@@ -49,17 +55,9 @@ const languages = [
 ];
 
 const CategoryFrom = () => {
-  const [addedImageValue, setAddedImageValue] = useState(null);
-  const [newInputSection, setNewInputSection] = useState([
-    {
-      id: uuidv4(),
-      name: "",
-      property: "",
-      content: "",
-    },
-  ]);
-
-  console.log("seo", { newInputSection });
+  const [addedImageValue, setAddedImageValue] = useState("");
+  const [metaData, setMetaData] = useState([]);
+  const [parentCategory, setParentCategory] = useState(null);
 
   // from schema
   const formSchema = z.object({
@@ -76,6 +74,7 @@ const CategoryFrom = () => {
     categorie_description: z.string(),
     parent_categorie: z.string(),
     child_categorie: z.string(),
+    status: z.string(),
   });
 
   // handle default values of form
@@ -89,16 +88,37 @@ const CategoryFrom = () => {
       categorie_description: "",
       parent_categorie: "",
       child_categorie: "",
+      status: "published",
     },
   });
 
   // handle form submission
-  const onSubmit = (data) => {
+  const onSubmit = ({
+    img_alt,
+    img_caption,
+    categorie_name,
+    slug_name,
+    categorie_description,
+    status,
+  }) => {
+    // payload data
+    const payload = {
+      img_alt,
+      img_caption,
+      categorie_name,
+      slug_name,
+      categorie_description,
+      parent_categorie: parentCategory,
+      status,
+      meta_info: metaData,
+      image_url: addedImageValue,
+    };
+
     toast({
       title: "You submitted the following values:",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">{JSON.stringify(payload, null, 2)}</code>
         </pre>
       ),
     });
@@ -109,7 +129,7 @@ const CategoryFrom = () => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         {/* category fields */}
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 bg-muted p-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-6 bg-muted p-4">
             {/* left column */}
             <div className="col-span-1 flex flex-col gap-4 flex-grow">
               {/* img */}
@@ -173,7 +193,7 @@ const CategoryFrom = () => {
             </div>
 
             {/* right column */}
-            <div className="col-span-2 grid gap-4 grid-cols-2">
+            <div className="col-span-1 xs:col-span-2 grid gap-4 xs:grid-cols-2 grid-cols-1">
               {/* categorie name */}
               <FormField
                 control={form.control}
@@ -213,7 +233,7 @@ const CategoryFrom = () => {
               />
 
               {/* categorie description */}
-              <div className="col-span-2">
+              <div className="col-span-1 xs:col-span-2">
                 <FormField
                   control={form.control}
                   name="categorie_description"
@@ -284,6 +304,7 @@ const CategoryFrom = () => {
                                       "parent_categorie",
                                       language.value
                                     );
+                                    setParentCategory(language.value);
                                   }}
                                 >
                                   {language.label}
@@ -362,6 +383,7 @@ const CategoryFrom = () => {
                                       "child_categorie",
                                       language.value
                                     );
+                                    setParentCategory(language.value);
                                   }}
                                 >
                                   {language.label}
@@ -394,15 +416,37 @@ const CategoryFrom = () => {
 
         {/* seo fields */}
         <CardContent>
-          <SEO
-            newInputSection={newInputSection}
-            setNewInputSection={setNewInputSection}
-          />
+          <SEO setMetaData={setMetaData} />
         </CardContent>
 
-        {/* submit button */}
-        <CardContent className="text-right">
-          <Button type="submit" className="w-1/5 font-medium">
+        {/* submit button & status field */}
+        <CardContent className="flex justify-end items-center gap-4">
+          {/* status */}
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" className=" xs:w-1/5 font-medium">
             Submit
           </Button>
         </CardContent>

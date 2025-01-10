@@ -33,9 +33,19 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const SEO = ({ newInputSection, setNewInputSection }) => {
+const SEO = ({ setMetaData }) => {
+  const [newInputSection, setNewInputSection] = useState([
+    {
+      id: uuidv4(),
+      name: "",
+      property: "",
+      content: "",
+    },
+  ]);
+
   // add a new section
   const handleAddNewSection = () => {
     setNewInputSection([
@@ -82,6 +92,18 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
     value: property,
   }));
 
+  useEffect(
+    () =>
+      setMetaData(
+        newInputSection.map(({ name, property, content }) => ({
+          name,
+          property,
+          content,
+        }))
+      ),
+    [newInputSection]
+  );
+
   return (
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem value="item-1" className="border-b-0 bg-muted p-4">
@@ -104,10 +126,10 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
             {newInputSection.map((section) => (
               <div
                 key={section.id}
-                className="grid grid-cols-12 gap-4 items-end"
+                className="grid md:grid-cols-12 gap-4 items-end"
               >
                 {/* name */}
-                <div className="col-span-3 w-full space-y-1">
+                <div className="md:col-span-3 w-full space-y-1">
                   <FormItem className="flex flex-col">
                     <FormLabel>Name</FormLabel>
                     <Popover>
@@ -165,7 +187,7 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
                 </div>
 
                 {/* property */}
-                <div className="col-span-3 w-full space-y-1">
+                <div className="md:col-span-3 w-full space-y-1">
                   <FormItem className="flex flex-col">
                     <FormLabel>Property</FormLabel>
                     <Popover>
@@ -223,7 +245,7 @@ const SEO = ({ newInputSection, setNewInputSection }) => {
                 </div>
 
                 {/* content */}
-                <div className="col-span-5 w-full space-y-1">
+                <div className="md:col-span-5 w-full space-y-1">
                   <Label htmlFor={`content-${section.id}`}>Content</Label>
                   <Input
                     type="text"

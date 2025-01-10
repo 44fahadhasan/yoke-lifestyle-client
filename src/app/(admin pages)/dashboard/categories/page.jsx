@@ -8,10 +8,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const AllCategoriesPage = () => {
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+
   const router = useRouter();
 
   return (
@@ -35,7 +48,34 @@ const AllCategoriesPage = () => {
         </Button>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="space-y-8">
+        {/* filters */}
+        <div className="w-full flex justify-between gap-4">
+          {/* search */}
+          <div className="w-1/3">
+            <Input
+              onChange={(e) => setSearch(e.target.value)}
+              type="text"
+              className="text-ellipsis"
+              placeholder="Search by Categorie name"
+            />
+          </div>
+
+          {/* sort */}
+          <Select onValueChange={(value) => setStatus(value)}>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Sort by	status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* categories table */}
         <CategoriesTable />
       </CardContent>
