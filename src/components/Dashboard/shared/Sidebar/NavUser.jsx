@@ -31,7 +31,6 @@ const NavUser = () => {
 
     if (res.success) {
       toast.success(res.message);
-      router.push("/");
     } else {
       toast.error(res.message);
     }

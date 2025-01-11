@@ -1,6 +1,7 @@
 "use client";
 import ImagePicker from "@/components/Dashboard/HelperComponent/ImageManager/ImagePicker";
 import SEO from "@/components/Dashboard/HelperComponent/SEOManager/SEO";
+import LoadingButton from "@/components/reusable/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import {
@@ -34,12 +35,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
+import useAuth from "@/hooks/useAuth";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const languages = [
@@ -55,9 +60,14 @@ const languages = [
 ];
 
 const CategoryFrom = () => {
+  const [loading, setLoading] = useState(false);
   const [addedImageValue, setAddedImageValue] = useState("");
   const [metaData, setMetaData] = useState([]);
   const [parentCategory, setParentCategory] = useState(null);
+
+  const { toast: popupTost } = useToast();
+  const { auth } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   // from schema
   const formSchema = z.object({
@@ -93,7 +103,7 @@ const CategoryFrom = () => {
   });
 
   // handle form submission
-  const onSubmit = ({
+  const onSubmit = async ({
     img_alt,
     img_caption,
     categorie_name,
@@ -108,20 +118,41 @@ const CategoryFrom = () => {
       categorie_name,
       slug_name,
       categorie_description,
-      parent_categorie: parentCategory,
       status,
-      meta_info: metaData,
       image_url: addedImageValue,
+      parent_categorie: parentCategory,
+      meta_info: metaData,
+      email: auth.email,
     };
 
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(payload, null, 2)}</code>
-        </pre>
-      ),
-    });
+    try {
+      setLoading(true);
+
+      const { data } = await axiosSecure.post("/api/categories", payload);
+
+      if (data.success) {
+        setAddedImageValue("");
+        form.reset();
+
+        popupTost({
+          title: `Great job! ${data.message}`,
+          description: "Make changes whenever you need to.",
+          action: <ToastAction altText="undo">Undo</ToastAction>,
+        });
+      }
+    } catch ({ response }) {
+      const { keyPattern, keyValue } = response?.data?.error?.errorResponse;
+
+      if (keyPattern?.categorie_name && keyValue?.categorie_name) {
+        return toast.error(
+          `The ${keyValue?.categorie_name} category is already exists. Please choose another name.`
+        );
+      }
+
+      toast.error(response.data.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -446,12 +477,18 @@ const CategoryFrom = () => {
             )}
           />
 
-          <Button type="submit" className=" xs:w-1/5 font-medium">
-            Submit
+          {/* submit button */}
+          <Button
+            disabled={loading}
+            type="submit"
+            className="xs:w-1/5 font-medium"
+          >
+            {loading ? <LoadingButton>Please wait</LoadingButton> : "Submit"}
           </Button>
         </CardContent>
       </form>
     </Form>
   );
 };
+
 export default CategoryFrom;

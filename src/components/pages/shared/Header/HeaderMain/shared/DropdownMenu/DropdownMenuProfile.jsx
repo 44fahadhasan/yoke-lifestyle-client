@@ -17,12 +17,9 @@ import {
   Package2,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const DropdownMenuProfile = () => {
-  const router = useRouter();
-
   const { logout, auth } = useAuth();
 
   // handle logout
@@ -31,7 +28,6 @@ const DropdownMenuProfile = () => {
 
     if (res.success) {
       toast.success(res.message);
-      router.push("/");
     } else {
       toast.error(res.message);
     }

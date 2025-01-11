@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 
@@ -7,6 +8,7 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(null);
 
+  const router = useRouter();
   const axiosPublic = useAxiosPublic();
 
   // handle user logout
@@ -17,6 +19,9 @@ const AuthProvider = ({ children }) => {
       if (data.success) {
         // user data remove from local storage
         localStorage.removeItem("userData");
+
+        // navigate to home page
+        router.push("/");
       }
 
       return data;
