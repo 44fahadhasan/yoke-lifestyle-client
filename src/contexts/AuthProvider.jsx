@@ -22,6 +22,8 @@ const AuthProvider = ({ children }) => {
 
         // navigate to home page
         router.push("/");
+
+        setAuth(null);
       }
 
       return data;
@@ -32,21 +34,16 @@ const AuthProvider = ({ children }) => {
 
   // auth sate auto update every 1 second
   useEffect(() => {
-    const interval = setInterval(() => {
-      const user = JSON.parse(localStorage.getItem("userData"));
-      if (user) {
-        setAuth(user);
-      } else {
-        setAuth(null);
-      }
-    }, 1000);
-
-    // Clear the interval on component unmount
-    return () => clearInterval(interval);
+    const user = JSON.parse(localStorage.getItem("userData"));
+    if (user) {
+      setAuth(user);
+    } else {
+      setAuth(null);
+    }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, logout }}>
+    <AuthContext.Provider value={{ auth, setAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );

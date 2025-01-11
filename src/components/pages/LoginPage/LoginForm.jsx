@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import useAuth from "@/hooks/useAuth";
 import useAxiosPublic from "@/hooks/useAxiosPublic";
 import Link from "next/link";
 import { useState } from "react";
@@ -23,6 +24,7 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const [isEyeOpen, setIsEyeOpen] = useState(false);
 
+  const { setAuth } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   const {
@@ -49,6 +51,9 @@ const LoginForm = () => {
 
       if (data.success) {
         toast.success(data.message);
+
+        // user data save to auth state
+        setAuth(data.data);
 
         // user data save to local storage
         localStorage.setItem("userData", JSON.stringify(data.data));

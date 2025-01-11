@@ -1,3 +1,4 @@
+import Tanstack from "@/components/common/Tanstack";
 import Footer from "@/components/pages/shared/Footer/Footer";
 import Header from "@/components/pages/shared/Header/Header";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
@@ -28,16 +29,15 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          {/* header */}
-          <Header />
-
-          <main className="bg-muted">{children}</main>
-
-          <Toaster />
-          <SonnerToaster position="top-center" />
-
-          {/* footer */}
-          <Footer />
+          <Tanstack>
+            {/* header */}
+            <Header />
+            <main className="bg-muted">{children}</main>
+            <Toaster />
+            <SonnerToaster position="top-center" />
+            {/* footer */}
+            <Footer />
+          </Tanstack>
         </AuthProvider>
       </body>
     </html>

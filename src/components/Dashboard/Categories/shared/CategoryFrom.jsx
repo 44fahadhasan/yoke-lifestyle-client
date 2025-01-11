@@ -38,35 +38,26 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
+import useAxiosPublic from "@/hooks/useAxiosPublic";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
-const languages = [
-  { label: "English", value: "en" },
-  { label: "French", value: "fr" },
-  { label: "German", value: "de" },
-  { label: "Spanish", value: "es" },
-  { label: "Portuguese", value: "pt" },
-  { label: "Russian", value: "ru" },
-  { label: "Japanese", value: "ja" },
-  { label: "Korean", value: "ko" },
-  { label: "Chinese", value: "zh" },
-];
 
 const CategoryFrom = () => {
   const [loading, setLoading] = useState(false);
   const [addedImageValue, setAddedImageValue] = useState("");
   const [metaData, setMetaData] = useState([]);
-  const [parentCategory, setParentCategory] = useState(null);
+  const [parentId, setParentId] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const { toast: popupTost } = useToast();
   const { auth } = useAuth();
+  const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
 
   // from schema
@@ -83,7 +74,7 @@ const CategoryFrom = () => {
       ),
     categorie_description: z.string(),
     parent_categorie: z.string(),
-    child_categorie: z.string(),
+    feature_categorie: z.string(),
     status: z.string(),
   });
 
@@ -97,30 +88,18 @@ const CategoryFrom = () => {
       slug_name: "",
       categorie_description: "",
       parent_categorie: "",
-      child_categorie: "",
+      feature_categorie: "no",
       status: "published",
     },
   });
 
   // handle form submission
-  const onSubmit = async ({
-    img_alt,
-    img_caption,
-    categorie_name,
-    slug_name,
-    categorie_description,
-    status,
-  }) => {
+  const onSubmit = async (data) => {
     // payload data
     const payload = {
-      img_alt,
-      img_caption,
-      categorie_name,
-      slug_name,
-      categorie_description,
-      status,
+      ...data,
+      parent_categorie: parentId,
       image_url: addedImageValue,
-      parent_categorie: parentCategory,
       meta_info: metaData,
       email: auth.email,
     };
@@ -137,7 +116,7 @@ const CategoryFrom = () => {
         popupTost({
           title: `Great job! ${data.message}`,
           description: "Make changes whenever you need to.",
-          action: <ToastAction altText="undo">Undo</ToastAction>,
+          action: <ToastAction altText="ok">Ok</ToastAction>,
         });
       }
     } catch ({ response }) {
@@ -154,6 +133,20 @@ const CategoryFrom = () => {
       setLoading(false);
     }
   };
+
+  // fetch categories list
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axiosPublic.get("/api/categories/list");
+        setCategories(data.data);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <Form {...form}>
@@ -298,7 +291,7 @@ const CategoryFrom = () => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className={`w-full flex justify-between capitalize hover:bg-primary-foreground 
+                            className={`w-full flex justify-between hover:bg-primary-foreground 
                                   ${!field.value && "text-muted-foreground"}
                                 )`}
                           >
@@ -326,23 +319,20 @@ const CategoryFrom = () => {
                             <CommandEmpty>No categorie found.</CommandEmpty>
 
                             <CommandGroup>
-                              {languages.map((language) => (
+                              {categories.map(({ value, label, _id }) => (
                                 <CommandItem
-                                  value={language.label}
-                                  key={language.value}
+                                  key={_id}
+                                  value={label}
                                   onSelect={() => {
-                                    form.setValue(
-                                      "parent_categorie",
-                                      language.value
-                                    );
-                                    setParentCategory(language.value);
+                                    form.setValue("parent_categorie", value);
+                                    setParentId(_id);
                                   }}
                                 >
-                                  {language.label}
+                                  {label}
                                   <Check
                                     className={`
                                           ml-auto ${
-                                            language.value === field.value
+                                            value === field.value
                                               ? "opacity-100"
                                               : "opacity-0"
                                           }
@@ -363,81 +353,27 @@ const CategoryFrom = () => {
                 )}
               />
 
-              {/* child categories */}
+              {/* feature categorie */}
               <FormField
                 control={form.control}
-                name="child_categorie"
+                name="feature_categorie"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Child Categories</FormLabel>
-                    <Popover>
-                      {/* trigger */}
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={`w-full flex justify-between capitalize hover:bg-primary-foreground 
-                                  ${!field.value && "text-muted-foreground"}
-                                )`}
-                          >
-                            {/* selected value */}
-                            {field.value
-                              ? field.value
-                              : "Select child categorie"}
-
-                            {/* icon */}
-                            <ChevronsUpDown className="opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-
-                      <PopoverContent className="p-0">
-                        <Command>
-                          {/* search input */}
-                          <CommandInput
-                            placeholder="Search categorie..."
-                            className="h-9"
-                          />
-
-                          {/* lists */}
-                          <CommandList>
-                            <CommandEmpty>No categorie found.</CommandEmpty>
-
-                            <CommandGroup>
-                              {languages.map((language) => (
-                                <CommandItem
-                                  value={language.label}
-                                  key={language.value}
-                                  onSelect={() => {
-                                    form.setValue(
-                                      "child_categorie",
-                                      language.value
-                                    );
-                                    setParentCategory(language.value);
-                                  }}
-                                >
-                                  {language.label}
-                                  <Check
-                                    className={`
-                                          ml-auto ${
-                                            language.value === field.value
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          }
-                                        `}
-                                  />
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      The category you are currently adding. If it has any child
-                      category, please select one child category.
-                    </FormDescription>
+                  <FormItem className="space-y-1 xs:-mt-[5px]">
+                    <FormLabel>Feature Categorie</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-primary-foreground">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />

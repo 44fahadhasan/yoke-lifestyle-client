@@ -17,11 +17,9 @@ import {
 } from "@/components/ui/sidebar";
 import useAuth from "@/hooks/useAuth";
 import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const NavUser = () => {
-  const router = useRouter();
   const { isMobile } = useSidebar();
   const { logout, auth } = useAuth();
 
