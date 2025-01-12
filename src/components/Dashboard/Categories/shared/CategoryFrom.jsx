@@ -38,7 +38,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
-import useAxiosPublic from "@/hooks/useAxiosPublic";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -57,7 +56,6 @@ const CategoryFrom = () => {
 
   const { toast: popupTost } = useToast();
   const { auth } = useAuth();
-  const axiosPublic = useAxiosPublic();
   const axiosSecure = useAxiosSecure();
 
   // from schema
@@ -74,7 +72,7 @@ const CategoryFrom = () => {
       ),
     categorie_description: z.string(),
     parent_categorie: z.string(),
-    feature_categorie: z.string(),
+    featured_categorie: z.string(),
     status: z.string(),
   });
 
@@ -88,7 +86,7 @@ const CategoryFrom = () => {
       slug_name: "",
       categorie_description: "",
       parent_categorie: "",
-      feature_categorie: "no",
+      featured_categorie: "no",
       status: "published",
     },
   });
@@ -138,7 +136,7 @@ const CategoryFrom = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axiosPublic.get("/api/categories/list");
+        const { data } = await axiosSecure.get("/api/categories/list");
         setCategories(data.data);
       } catch (err) {
         console.error(err.message);
@@ -356,10 +354,10 @@ const CategoryFrom = () => {
               {/* feature categorie */}
               <FormField
                 control={form.control}
-                name="feature_categorie"
+                name="featured_categorie"
                 render={({ field }) => (
                   <FormItem className="space-y-1 xs:-mt-[5px]">
-                    <FormLabel>Feature Categorie</FormLabel>
+                    <FormLabel>Featured Categorie</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

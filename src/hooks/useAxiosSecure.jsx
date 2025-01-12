@@ -1,8 +1,10 @@
 import axios from "axios";
 import useAuth from "./useAuth";
 
+const base_url = process.env.NEXT_PUBLIC_API_URL;
+
 const axiosSecure = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: base_url,
   withCredentials: true, // required for sending signed cookies
 });
 
@@ -38,7 +40,7 @@ const useAxiosSecure = () => {
         try {
           // refresh the access token
           await axios.post(
-            `${import.meta.env.VITE_API_URL}/api/users/refresh`,
+            `${base_url}/api/users/refresh`,
             {},
             { withCredentials: true }
           );

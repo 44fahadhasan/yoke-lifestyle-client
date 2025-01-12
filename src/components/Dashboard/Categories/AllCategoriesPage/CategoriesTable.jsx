@@ -43,6 +43,7 @@ const CategoriesTable = () => {
             <TableHead>Categorie Name</TableHead>
             <TableHead>Slug/path Name</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Featured</TableHead>
             <TableHead>Added Date</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -61,6 +62,9 @@ const CategoriesTable = () => {
 
             {/* status */}
             <TableCell>Published</TableCell>
+
+            {/* featured */}
+            <TableCell>Yes</TableCell>
 
             {/* added date */}
             <TableCell>10 Jan 2025</TableCell>

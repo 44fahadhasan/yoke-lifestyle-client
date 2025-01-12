@@ -5,8 +5,8 @@ export function middleware(req) {
   // get requested path name
   const pathname = req.nextUrl.pathname;
 
-  // get access token
-  const rawToken = cookies(req).get("accessToken");
+  // get refresh token
+  const rawToken = cookies(req).get("refreshToken");
   const token = rawToken?.value;
 
   // if token is null, redirect to login

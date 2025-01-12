@@ -114,4 +114,20 @@ const metaTags = [
 const nameTags = metaTags.filter(({ name }) => name);
 const propertyTags = metaTags.filter(({ property }) => property);
 
-export { metaTags, nameTags, propertyTags };
+const featureds = [
+  { value: "No", label: "No" },
+  { value: "Yes", label: "Yes" },
+];
+
+const sorts = [
+  { value: "Newest", label: "Newest" },
+  { value: "Oldest", label: "Oldest" },
+];
+
+const statuss = [
+  { value: "Published", label: "Published" },
+  { value: "Archived", label: "Archived" },
+  { value: "Draft", label: "Draft" },
+];
+
+export { featureds, metaTags, nameTags, propertyTags, sorts, statuss };
