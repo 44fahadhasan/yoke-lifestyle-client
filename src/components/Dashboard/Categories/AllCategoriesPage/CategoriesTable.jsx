@@ -92,7 +92,7 @@ const CategoriesTable = () => {
         toast.success(data.message);
       }
     } catch ({ response }) {
-      toast.error(response.data.message);
+      toast.error(response?.data?.message);
     }
   };
 

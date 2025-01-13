@@ -100,7 +100,7 @@ const SingupForm = () => {
         resetField("password");
       }
     } catch ({ response }) {
-      toast.error(response.data.message);
+      toast.error(response?.data?.message);
     } finally {
       setLoading(false);
     }

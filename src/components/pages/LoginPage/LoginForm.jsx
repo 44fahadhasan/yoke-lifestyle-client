@@ -59,7 +59,7 @@ const LoginForm = () => {
         localStorage.setItem("userData", JSON.stringify(data.data));
       }
     } catch ({ response }) {
-      toast.error(response.data.message);
+      toast.error(response?.data?.message);
     } finally {
       // clear inputs
       resetField("email");
