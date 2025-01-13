@@ -35,102 +35,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/hooks/use-toast";
-import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
-const CategoryFrom = () => {
-  const [loading, setLoading] = useState(false);
-  const [addedImageValue, setAddedImageValue] = useState("");
-  const [metaData, setMetaData] = useState([]);
-  const [parentId, setParentId] = useState(null);
+const CategoryFrom = ({
+  form,
+  onSubmit,
+  loading,
+  setMetaData,
+  setParentId,
+  addedImageValue,
+  setAddedImageValue,
+}) => {
   const [categories, setCategories] = useState([]);
 
-  const { toast: popupTost } = useToast();
-  const { auth } = useAuth();
   const axiosSecure = useAxiosSecure();
-
-  // from schema
-  const formSchema = z.object({
-    img_alt: z.string(),
-    img_caption: z.string(),
-    categorie_name: z.string().min(1, "Category name is required."),
-    slug_name: z
-      .string()
-      .min(1, "Slug name is required.")
-      .regex(
-        /^[a-z-]+$/,
-        "Slug name can only contain lowercase letters and hyphens."
-      ),
-    categorie_description: z.string(),
-    parent_categorie: z.string(),
-    featured_categorie: z.string(),
-    status: z.string(),
-  });
-
-  // handle default values of form
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      img_alt: "",
-      img_caption: "",
-      categorie_name: "",
-      slug_name: "",
-      categorie_description: "",
-      parent_categorie: "",
-      featured_categorie: "no",
-      status: "published",
-    },
-  });
-
-  // handle form submission
-  const onSubmit = async (data) => {
-    // payload data
-    const payload = {
-      ...data,
-      parent_categorie: parentId,
-      image_url: addedImageValue,
-      meta_info: metaData,
-      email: auth.email,
-    };
-
-    try {
-      setLoading(true);
-
-      const { data } = await axiosSecure.post("/api/categories", payload);
-
-      if (data.success) {
-        setAddedImageValue("");
-        form.reset();
-
-        popupTost({
-          title: `Great job! ${data.message}`,
-          description: "Make changes whenever you need to.",
-          action: <ToastAction altText="ok">Ok</ToastAction>,
-        });
-      }
-    } catch ({ response }) {
-      const { keyPattern, keyValue } = response?.data?.error?.errorResponse;
-
-      if (keyPattern?.categorie_name && keyValue?.categorie_name) {
-        return toast.error(
-          `The ${keyValue?.categorie_name} category is already exists. Please choose another name.`
-        );
-      }
-
-      toast.error(response.data.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // fetch categories list
   useEffect(() => {

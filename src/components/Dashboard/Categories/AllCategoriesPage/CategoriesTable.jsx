@@ -125,7 +125,7 @@ const CategoriesTable = () => {
         </TableHeader>
 
         <TableBody>
-          {!isLoading
+          {isLoading
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <TableRow key={idx}>
                   <TableCell>
