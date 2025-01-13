@@ -138,9 +138,7 @@ const SEO = ({ setMetaData }) => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className={`w-full flex justify-between hover:bg-primary-foreground ${
-                              !section.name && "text-muted-foreground"
-                            }`}
+                            className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                           >
                             {section.name || "Select name"}
                             <ChevronsUpDown className="opacity-50" />
@@ -196,9 +194,7 @@ const SEO = ({ setMetaData }) => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className={`w-full flex justify-between hover:bg-primary-foreground ${
-                              !section.property && "text-muted-foreground"
-                            }`}
+                            className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                           >
                             {section.property || "Select property"}
                             <ChevronsUpDown className="opacity-50" />

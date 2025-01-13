@@ -289,9 +289,7 @@ const CategoryFrom = () => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className={`w-full flex justify-between hover:bg-primary-foreground 
-                                  ${!field.value && "text-muted-foreground"}
-                                )`}
+                            className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                           >
                             {/* selected value */}
                             {field.value
