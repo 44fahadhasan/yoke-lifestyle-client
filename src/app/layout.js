@@ -4,6 +4,8 @@ import Header from "@/components/pages/shared/Header/Header";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/contexts/AuthProvider";
+import DataProvider from "@/contexts/DataProvider";
+import ThemeProvider from "@/contexts/ThemeProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -28,17 +30,21 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <Tanstack>
-            {/* header */}
-            <Header />
-            <main className="bg-muted">{children}</main>
-            <Toaster />
-            <SonnerToaster position="top-center" />
-            {/* footer */}
-            <Footer />
-          </Tanstack>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <Tanstack>
+              <DataProvider>
+                {/* header */}
+                <Header />
+                <main className="bg-muted">{children}</main>
+                <Toaster />
+                <SonnerToaster position="top-center" />
+                {/* footer */}
+                <Footer />
+              </DataProvider>
+            </Tanstack>
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

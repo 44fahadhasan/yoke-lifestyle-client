@@ -1,4 +1,5 @@
 "use client";
+import { ModeToggle } from "@/components/common/ModeToggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,7 +19,7 @@ const Header = () => {
   const pathSegments = pathname.split("/").filter(Boolean);
 
   return (
-    <header className="border flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="border flex justify-between h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2">
         {/* sidebar trigger button */}
         <SidebarTrigger className="-ml-1" />
@@ -58,6 +59,8 @@ const Header = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+
+      <ModeToggle />
     </header>
   );
 };

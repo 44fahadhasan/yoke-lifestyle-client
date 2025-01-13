@@ -1,24 +1,6 @@
 "use client";
-import TypographySmall from "@/components/reusable/Typography/TypographySmall";
 import { Button } from "@/components/ui/button";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -27,14 +9,107 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, FilePenLine, Trash2 } from "lucide-react";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import useDataHandler from "@/hooks/useDataHandler";
+import useDebounce from "@/hooks/useDebounce";
+import { useQuery } from "@tanstack/react-query";
+import { Eye, FilePenLine } from "lucide-react";
+import moment from "moment";
 import { useRouter } from "next/navigation";
+import queryString from "query-string";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import DeleteAlert from "../../shared/DeleteAlert/DeleteAlert";
+import TableFooterFilter from "../../shared/TableFooter/TableFooterFilter";
+import TableHeaderFilter from "./TableHeaderFilter";
 
 const CategoriesTable = () => {
+  const [api, setApi] = useState("/api/categories");
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [featured, setFeatured] = useState("");
+  const [sort, setSort] = useState("");
+
+  const {
+    activePageNumber,
+    totalCategorieNumber,
+    setTotalCategorieNumber,
+    parPageCategorie,
+  } = useDataHandler();
   const router = useRouter();
+  const axiosSecure = useAxiosSecure();
+  const debouncedSearch = useDebounce(search);
+
+  // fetch categories
+  const {
+    data: categories = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["categories-admin", api],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(api);
+      setTotalCategorieNumber(data?.totalCategories);
+      return data?.data;
+    },
+  });
+
+  // api makeing
+  useEffect(() => {
+    // create query object
+    const queryObject = {
+      page: activePageNumber,
+      size: parPageCategorie,
+      ...(debouncedSearch && { search: debouncedSearch }),
+      ...(status && { status }),
+      ...(featured && { featured }),
+      ...(sort && { sort }),
+    };
+
+    // create query string
+    const url = queryString.stringifyUrl({
+      url: "/api/categories",
+      query: queryObject,
+    });
+
+    setApi(url);
+  }, [
+    activePageNumber,
+    parPageCategorie,
+    debouncedSearch,
+    status,
+    featured,
+    sort,
+  ]);
+
+  // handle delete
+  const handleDelete = async (id) => {
+    try {
+      const { data } = await axiosSecure.delete(`/api/categories/${id}`);
+
+      if (data.success) {
+        refetch();
+        toast.success(data.message);
+      }
+    } catch ({ response }) {
+      toast.error(response.data.message);
+    }
+  };
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-8">
+      {/* top filters */}
+      <TableHeaderFilter
+        search={search}
+        setSearch={setSearch}
+        status={status}
+        setStatus={setStatus}
+        featured={featured}
+        setFeatured={setFeatured}
+        sort={sort}
+        setSort={setSort}
+      />
+
       {/* table */}
       <Table>
         <TableHeader>
@@ -50,98 +125,116 @@ const CategoriesTable = () => {
         </TableHeader>
 
         <TableBody>
-          <TableRow>
-            {/* serial number */}
-            <TableCell className="font-medium">01</TableCell>
+          {isLoading
+            ? Array.from({ length: 6 }).map((_, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>
+                    <Skeleton className="w-[100px] h-[20px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-[200px] h-[20px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-[200px] h-[20px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-[100px] h-[20px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-[100px] h-[20px]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="w-[150px] h-[20px]" />
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex gap-x-1 sm:gap-x-2 justify-center">
+                      <Skeleton className="w-[20px] h-[20px]" />
+                      <Skeleton className="w-[20px] h-[20px]" />
+                      <Skeleton className="w-[20px] h-[20px]" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            : categories?.map(
+                (
+                  {
+                    _id,
+                    categorie_name,
+                    slug_name,
+                    status,
+                    featured_categorie,
+                    createdAt,
+                  },
+                  idx
+                ) => (
+                  <TableRow key={_id}>
+                    {/* serial number */}
+                    <TableCell className="font-medium">{idx + 1}</TableCell>
 
-            {/* categorie name */}
-            <TableCell>Womens</TableCell>
+                    {/* categorie name */}
+                    <TableCell>{categorie_name}</TableCell>
 
-            {/* categorie slug/path */}
-            <TableCell>womens</TableCell>
+                    {/* categorie slug/path */}
+                    <TableCell>{slug_name}</TableCell>
 
-            {/* status */}
-            <TableCell>Published</TableCell>
+                    {/* status */}
+                    <TableCell className="capitalize">{status}</TableCell>
 
-            {/* featured */}
-            <TableCell>Yes</TableCell>
+                    {/* featured */}
+                    <TableCell className="capitalize">
+                      {featured_categorie}
+                    </TableCell>
 
-            {/* added date */}
-            <TableCell>10 Jan 2025</TableCell>
+                    {/* added date */}
+                    <TableCell>
+                      {moment(createdAt).format("MMM DD, YYYY")}
+                    </TableCell>
 
-            {/* action */}
-            <TableCell className="text-center">
-              <div className="flex gap-x-1 sm:gap-x-2 justify-center">
-                {/* edit */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/edit-categorie/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <FilePenLine size={16} />
-                </Button>
+                    {/* action */}
+                    <TableCell className="text-center">
+                      <div className="flex gap-x-1 sm:gap-x-2 justify-center">
+                        {/* edit */}
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            router.push(
+                              `/dashboard/categories/edit-categorie/${_id}`
+                            )
+                          }
+                          className="px-1 sm:px-[6px]"
+                        >
+                          <FilePenLine size={16} />
+                        </Button>
+                        {/* details */}
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            router.push(`/dashboard/categories/details/${_id}`)
+                          }
+                          className="px-1 sm:px-[6px]"
+                        >
+                          <Eye size={16} />
+                        </Button>
 
-                {/* details */}
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    router.push(`/dashboard/categories/details/${"id"}`)
-                  }
-                  className="px-1 sm:px-[6px]"
-                >
-                  <Eye size={16} />
-                </Button>
-
-                {/* delete */}
-                <Button variant="destructive" className="px-1 sm:px-[6px]">
-                  <Trash2 size={16} />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
+                        {/* delete */}
+                        <DeleteAlert
+                          handleDelete={handleDelete}
+                          id={_id}
+                          label={"category"}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
         </TableBody>
       </Table>
 
-      {/* filter */}
-      <div className="flex justify-between items-center">
-        <div className="min-w-fit">
-          <TypographySmall>Page 1 of 10</TypographySmall>
-        </div>
-
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-
-        <Select>
-          <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="6" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Rows per page</SelectLabel>
-              <SelectItem value="6">6</SelectItem>
-              <SelectItem value="12">12</SelectItem>
-              <SelectItem value="24">24</SelectItem>
-              <SelectItem value="48">48</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+      {/* bottom filter */}
+      <TableFooterFilter
+        totalItemsNumber={totalCategorieNumber}
+        itemsPerPage={parPageCategorie}
+      />
     </div>
   );
 };
