@@ -125,32 +125,32 @@ const CategoriesTable = () => {
         </TableHeader>
 
         <TableBody>
-          {isLoading
+          {!isLoading
             ? Array.from({ length: 6 }).map((_, idx) => (
                 <TableRow key={idx}>
                   <TableCell>
-                    <Skeleton className="w-[100px] h-[20px]" />
+                    <Skeleton className="w-[100px] h-[35px]" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="w-[200px] h-[20px]" />
+                    <Skeleton className="w-[200px] h-[35px]" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="w-[200px] h-[20px]" />
+                    <Skeleton className="w-[200px] h-[35px]" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="w-[100px] h-[20px]" />
+                    <Skeleton className="w-[100px] h-[35px]" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="w-[100px] h-[20px]" />
+                    <Skeleton className="w-[100px] h-[35px]" />
                   </TableCell>
                   <TableCell>
-                    <Skeleton className="w-[150px] h-[20px]" />
+                    <Skeleton className="w-[150px] h-[35px]" />
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="flex gap-x-1 sm:gap-x-2 justify-center">
-                      <Skeleton className="w-[20px] h-[20px]" />
-                      <Skeleton className="w-[20px] h-[20px]" />
-                      <Skeleton className="w-[20px] h-[20px]" />
+                      <Skeleton className="w-[35px] h-[35px]" />
+                      <Skeleton className="w-[35px] h-[35px]" />
+                      <Skeleton className="w-[35px] h-[35px]" />
                     </div>
                   </TableCell>
                 </TableRow>
