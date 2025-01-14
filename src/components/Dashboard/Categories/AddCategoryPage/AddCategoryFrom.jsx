@@ -17,7 +17,7 @@ const AddCategoryFrom = () => {
   const [loading, setLoading] = useState(false);
 
   const { auth } = useAuth();
-  const { toast: popupTost } = useToast();
+  const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
 
   // handle default values of form
@@ -55,7 +55,7 @@ const AddCategoryFrom = () => {
         setAddedImageValue("");
         form.reset();
 
-        popupTost({
+        popupToast({
           title: `Great job! ${data.message}`,
           description: "Make changes whenever you need to.",
           action: <ToastAction altText="ok">Ok</ToastAction>,
