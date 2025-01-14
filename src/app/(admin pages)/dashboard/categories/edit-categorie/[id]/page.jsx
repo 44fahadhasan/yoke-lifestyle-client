@@ -1,7 +1,7 @@
 import EditCategorieFrom from "@/components/Dashboard/Categories/EditCategoriePage/EditCategorieFrom";
 import { Card } from "@/components/ui/card";
 
-const EditCategoriePage = ({ params }) => {
+const EditCategoriePage = () => {
   return (
     <Card className="rounded shadow-none">
       <EditCategorieFrom />
