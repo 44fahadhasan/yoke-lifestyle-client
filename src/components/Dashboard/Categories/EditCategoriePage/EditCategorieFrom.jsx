@@ -15,7 +15,6 @@ import CategoryFrom from "../shared/CategoryFrom";
 const EditCategorieFrom = () => {
   const [addedImageValue, setAddedImageValue] = useState("");
   const [metaData, setMetaData] = useState([]);
-  const [parentId, setParentId] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const { id } = useParams();
@@ -32,7 +31,7 @@ const EditCategorieFrom = () => {
       categorie_name: "",
       slug_name: "",
       categorie_description: "",
-      parent_categorie: "",
+      parent_categorie: null,
       featured_categorie: "",
       status: "",
     },
@@ -58,7 +57,6 @@ const EditCategorieFrom = () => {
       } = data?.data || {};
 
       setAddedImageValue(image_url);
-      setParentId(parent_categorie);
       setMetaData(meta_info);
 
       // set default values of form input filed
@@ -82,7 +80,6 @@ const EditCategorieFrom = () => {
     // payload data
     const payload = {
       ...data,
-      parent_categorie: parentId,
       image_url: addedImageValue,
       meta_info: metaData,
       email: auth.email,
@@ -117,7 +114,6 @@ const EditCategorieFrom = () => {
       isLoading={isLoading}
       metaData={metaData}
       setMetaData={setMetaData}
-      setParentId={setParentId}
       addedImageValue={addedImageValue}
       setAddedImageValue={setAddedImageValue}
     />

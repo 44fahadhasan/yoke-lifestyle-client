@@ -48,7 +48,6 @@ const CategoryFrom = ({
   isLoading,
   metaData,
   setMetaData,
-  setParentId,
   addedImageValue,
   setAddedImageValue,
 }) => {
@@ -269,8 +268,7 @@ const CategoryFrom = ({
                                     key={_id}
                                     value={label}
                                     onSelect={() => {
-                                      form.setValue("parent_categorie", value);
-                                      setParentId(_id);
+                                      form.setValue("parent_categorie", _id);
                                     }}
                                   >
                                     {label}
