@@ -241,7 +241,9 @@ const CategoryFrom = ({
                             >
                               {/* selected value */}
                               {field.value
-                                ? field.value
+                                ? categories.find(
+                                    ({ _id }) => _id === field.value
+                                  )?.label || field.value
                                 : "Select parent categorie"}
 
                               {/* icon */}
