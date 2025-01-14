@@ -13,7 +13,7 @@ const categorieFormSchema = z.object({
       "Slug name can only contain lowercase letters and hyphens."
     ),
   categorie_description: z.string(),
-  parent_categorie: z.string(),
+  parent_categorie: z.union([z.string(), z.literal(null)]).default(null),
   featured_categorie: z.string(),
   status: z.string(),
 });

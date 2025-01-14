@@ -46,6 +46,7 @@ const CategoryFrom = ({
   onSubmit,
   loading,
   isLoading,
+  metaData,
   setMetaData,
   setParentId,
   addedImageValue,
@@ -329,9 +330,9 @@ const CategoryFrom = ({
         {/* seo fields */}
         <CardContent>
           {isLoading ? (
-            <Skeleton className="h-28 w-full rounded-md" />
+            <Skeleton className="h-28 w-full rounded-none" />
           ) : (
-            <SEO setMetaData={setMetaData} />
+            <SEO metaData={metaData} setMetaData={setMetaData} />
           )}
         </CardContent>
 

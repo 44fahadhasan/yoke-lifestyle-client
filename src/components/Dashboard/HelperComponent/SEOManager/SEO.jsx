@@ -36,22 +36,24 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const SEO = ({ setMetaData }) => {
-  const [newInputSection, setNewInputSection] = useState([
-    {
-      id: uuidv4(),
-      name: "",
-      property: "",
-      content: "",
-    },
-  ]);
+const SEO = ({ metaData, setMetaData }) => {
+  const [newInputSection, setNewInputSection] = useState(
+    metaData || [
+      {
+        _id: uuidv4(),
+        name: "",
+        property: "",
+        content: "",
+      },
+    ]
+  );
 
   // add a new section
   const handleAddNewSection = () => {
     setNewInputSection([
       ...newInputSection,
       {
-        id: uuidv4(),
+        _id: uuidv4(),
         name: "",
         property: "",
         content: "",
@@ -62,7 +64,7 @@ const SEO = ({ setMetaData }) => {
   // delete a section
   const handleDeleteSection = (sectionId) => {
     setNewInputSection(
-      newInputSection.filter((section) => section.id !== sectionId)
+      newInputSection.filter((section) => section._id !== sectionId)
     );
   };
 
@@ -70,7 +72,7 @@ const SEO = ({ setMetaData }) => {
   const handleUpdateSection = (id, field, value) => {
     setNewInputSection((prevSections) =>
       prevSections.map((section) =>
-        section.id === id
+        section._id === id
           ? {
               ...section,
               [field]: value,
@@ -125,7 +127,7 @@ const SEO = ({ setMetaData }) => {
           <div className="space-y-5">
             {newInputSection.map((section) => (
               <div
-                key={section.id}
+                key={section._id}
                 className="grid md:grid-cols-12 gap-4 items-end"
               >
                 {/* name */}
@@ -160,7 +162,7 @@ const SEO = ({ setMetaData }) => {
                                   value={label}
                                   onSelect={(value) =>
                                     handleUpdateSection(
-                                      section.id,
+                                      section._id,
                                       "name",
                                       value
                                     )
@@ -216,7 +218,7 @@ const SEO = ({ setMetaData }) => {
                                   value={label}
                                   onSelect={(value) =>
                                     handleUpdateSection(
-                                      section.id,
+                                      section._id,
                                       "property",
                                       value
                                     )
@@ -242,13 +244,17 @@ const SEO = ({ setMetaData }) => {
 
                 {/* content */}
                 <div className="md:col-span-5 w-full space-y-1">
-                  <Label htmlFor={`content-${section.id}`}>Content</Label>
+                  <Label htmlFor={`content-${section._id}`}>Content</Label>
                   <Input
                     type="text"
-                    id={`content-${section.id}`}
+                    id={`content-${section._id}`}
                     value={section.content}
                     onChange={(e) =>
-                      handleUpdateSection(section.id, "content", e.target.value)
+                      handleUpdateSection(
+                        section._id,
+                        "content",
+                        e.target.value
+                      )
                     }
                     className="bg-primary-foreground"
                     placeholder='content="any"'
@@ -257,7 +263,7 @@ const SEO = ({ setMetaData }) => {
 
                 {/* section delete button */}
                 <Button
-                  onClick={() => handleDeleteSection(section.id)}
+                  onClick={() => handleDeleteSection(section._id)}
                   variant="destructive"
                   className="col-span-1 w-full"
                 >
