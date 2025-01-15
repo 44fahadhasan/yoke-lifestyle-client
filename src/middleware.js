@@ -1,12 +1,12 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-export function middleware(req) {
+export async function middleware(req) {
   // get requested path name
   const pathname = req.nextUrl.pathname;
 
-  // get refresh token
-  const rawToken = cookies(req).get("refreshToken");
+  // get refresh token with asynchronously
+  const cookieStore = req.cookies;
+  const rawToken = await cookieStore.get("refreshToken");
   const token = rawToken?.value;
 
   // if token is null, redirect to login
