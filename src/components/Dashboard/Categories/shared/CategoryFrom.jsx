@@ -36,10 +36,8 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 const CategoryFrom = ({
   form,
@@ -50,25 +48,8 @@ const CategoryFrom = ({
   setMetaData,
   addedImageValue,
   setAddedImageValue,
+  categoriesList,
 }) => {
-  const [categories, setCategories] = useState([]);
-
-  const axiosSecure = useAxiosSecure();
-
-  // fetch categories list
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { data } = await axiosSecure.get("/api/categories/list");
-        setCategories(data.data);
-      } catch (err) {
-        console.error(err.message);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -240,7 +221,7 @@ const CategoryFrom = ({
                             >
                               {/* selected value */}
                               {field.value
-                                ? categories.find(
+                                ? categoriesList?.find(
                                     ({ _id }) => _id === field.value
                                   )?.label || field.value
                                 : "Select parent categorie"}
@@ -263,24 +244,26 @@ const CategoryFrom = ({
                               <CommandEmpty>No categorie found.</CommandEmpty>
 
                               <CommandGroup>
-                                {categories.map(({ value, label, _id }) => (
-                                  <CommandItem
-                                    key={_id}
-                                    value={label}
-                                    onSelect={() => {
-                                      form.setValue("parent_categorie", _id);
-                                    }}
-                                  >
-                                    {label}
-                                    <Check
-                                      className={`ml-auto ${
-                                        value === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                  </CommandItem>
-                                ))}
+                                {categoriesList?.map(
+                                  ({ value, label, _id }) => (
+                                    <CommandItem
+                                      key={_id}
+                                      value={label}
+                                      onSelect={() => {
+                                        form.setValue("parent_categorie", _id);
+                                      }}
+                                    >
+                                      {label}
+                                      <Check
+                                        className={`ml-auto ${
+                                          _id === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        }`}
+                                      />
+                                    </CommandItem>
+                                  )
+                                )}
                               </CommandGroup>
                             </CommandList>
                           </Command>

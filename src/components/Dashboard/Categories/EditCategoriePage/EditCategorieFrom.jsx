@@ -37,6 +37,16 @@ const EditCategorieFrom = () => {
     },
   });
 
+  // fetch categories list
+  const { data: categoriesList = [], refetch: refetchCategoriesList } =
+    useQuery({
+      queryKey: ["categories-list"],
+      queryFn: async () => {
+        const { data } = await axiosSecure.get("/api/categories/list");
+        return data?.data;
+      },
+    });
+
   // fetch categorie
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["categorie-details", id],
@@ -91,6 +101,7 @@ const EditCategorieFrom = () => {
       const { data } = await axiosSecure.put(`/api/categories/${id}`, payload);
 
       if (data.success) {
+        refetchCategoriesList();
         refetch();
 
         popupToast({
@@ -116,6 +127,7 @@ const EditCategorieFrom = () => {
       setMetaData={setMetaData}
       addedImageValue={addedImageValue}
       setAddedImageValue={setAddedImageValue}
+      categoriesList={categoriesList}
     />
   );
 };

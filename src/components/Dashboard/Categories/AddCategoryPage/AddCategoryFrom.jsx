@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,6 +19,15 @@ const AddCategoryFrom = () => {
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
+
+  // fetch categories list
+  const { data: categoriesList = [], refetch } = useQuery({
+    queryKey: ["categories-list"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/api/categories/list");
+      return data?.data;
+    },
+  });
 
   // handle default values of form
   const form = useForm({
@@ -50,6 +60,8 @@ const AddCategoryFrom = () => {
       const { data } = await axiosSecure.post("/api/categories", payload);
 
       if (data.success) {
+        refetch();
+
         setAddedImageValue("");
         form.reset();
 
@@ -83,6 +95,7 @@ const AddCategoryFrom = () => {
       setMetaData={setMetaData}
       addedImageValue={addedImageValue}
       setAddedImageValue={setAddedImageValue}
+      categoriesList={categoriesList}
     />
   );
 };
