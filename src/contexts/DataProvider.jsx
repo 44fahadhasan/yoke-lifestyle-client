@@ -12,6 +12,10 @@ const DataProvider = ({ children }) => {
   const [totalCategorieNumber, setTotalCategorieNumber] = useState(0);
   const [parPageCategorie, setParPageCategorie] = useState(6);
 
+  // attributes state
+  const [totalAttributeNumber, setTotalAttributeNumber] = useState(0);
+  const [parPageAttribute, setParPageAttribute] = useState(6);
+
   const data = {
     activePageNumber,
     setActivePageNumber,
@@ -21,6 +25,10 @@ const DataProvider = ({ children }) => {
     setTotalCategorieNumber,
     parPageCategorie,
     setParPageCategorie,
+    totalAttributeNumber,
+    setTotalAttributeNumber,
+    parPageAttribute,
+    setParPageAttribute,
   };
 
   return <DataContext.Provider value={data}>{children}</DataContext.Provider>;

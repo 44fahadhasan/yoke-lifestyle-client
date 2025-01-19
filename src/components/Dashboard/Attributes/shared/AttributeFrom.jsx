@@ -47,6 +47,7 @@ const AttributeFrom = ({
   isLoading,
   inputs,
   setInputs,
+  setCategorieName,
 }) => {
   // add a new input
   const handleAddInput = () => {
@@ -229,6 +230,7 @@ const AttributeFrom = ({
                                             "category_specific_attribute",
                                             _id
                                           );
+                                          setCategorieName(label);
                                         }}
                                       >
                                         {label}

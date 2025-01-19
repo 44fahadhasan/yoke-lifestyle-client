@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/select";
 import useDataHandler from "@/hooks/useDataHandler";
 
-const TableFooterFilter = ({ totalItemsNumber, itemsPerPage }) => {
-  const { activePageNumber, setParPageCategorie, totalPageNumber } =
-    useDataHandler();
+const TableFooterFilter = ({
+  totalItemsNumber,
+  itemsPerPage,
+  setParPageRows,
+}) => {
+  const { activePageNumber, totalPageNumber } = useDataHandler();
 
   return (
     <div className="flex justify-between items-center">
@@ -32,7 +35,7 @@ const TableFooterFilter = ({ totalItemsNumber, itemsPerPage }) => {
       />
 
       {/* selector */}
-      <Select onValueChange={(value) => setParPageCategorie(value)}>
+      <Select onValueChange={(value) => setParPageRows(value)}>
         <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="6" />
         </SelectTrigger>

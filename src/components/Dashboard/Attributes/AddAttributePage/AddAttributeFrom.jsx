@@ -15,6 +15,7 @@ const AddAttributeFrom = () => {
   const [loading, setLoading] = useState(false);
   const [inputs, setInputs] = useState([{ _id: uuidv4(), value: "" }]);
   const [attributeValues, setAttributeValues] = useState([]);
+  const [categorieName, setCategorieName] = useState(null);
 
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
@@ -38,6 +39,7 @@ const AddAttributeFrom = () => {
     const payload = {
       ...data,
       priority_number: Number(data.priority_number),
+      categorie_name: categorieName,
       attribute_values: attributeValues,
       email: auth.email,
     };
@@ -94,6 +96,7 @@ const AddAttributeFrom = () => {
       loading={loading}
       inputs={inputs}
       setInputs={setInputs}
+      setCategorieName={setCategorieName}
     />
   );
 };

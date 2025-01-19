@@ -30,6 +30,7 @@ const attributeFormSchema = z.object({
   category_specific_attribute: z
     .union([z.string(), z.literal(null)])
     .default(null),
+  status: z.string(),
 });
 
 export { attributeFormSchema, categorieFormSchema };

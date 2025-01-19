@@ -27,7 +27,7 @@ const DeleteAlert = ({ handleDelete, id, label }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete this
+            This action cannot be undone. This will permanently delete this{" "}
             {label} and remove your data from servers.
           </AlertDialogDescription>
         </AlertDialogHeader>

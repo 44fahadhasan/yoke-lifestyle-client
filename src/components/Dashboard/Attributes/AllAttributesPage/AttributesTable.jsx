@@ -23,34 +23,33 @@ import DeleteAlert from "../../shared/DeleteAlert/DeleteAlert";
 import TableFooterFilter from "../../shared/TableFooter/TableFooterFilter";
 import TableHeaderFilter from "./TableHeaderFilter";
 
-const CategoriesTable = () => {
-  const [api, setApi] = useState("/api/categories");
+const AttributesTable = () => {
+  const [api, setApi] = useState("/api/product-attributes");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  const [featured, setFeatured] = useState("");
   const [sort, setSort] = useState("");
 
   const {
     activePageNumber,
-    totalCategorieNumber,
-    setTotalCategorieNumber,
-    parPageCategorie,
-    setParPageCategorie,
+    totalAttributeNumber,
+    setTotalAttributeNumber,
+    parPageAttribute,
+    setParPageAttribute,
   } = useDataHandler();
   const router = useRouter();
   const axiosSecure = useAxiosSecure();
   const debouncedSearch = useDebounce(search);
 
-  // fetch categories
+  // fetch attributes
   const {
-    data: categories = [],
+    data: attributes = [],
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["categories-admin", api],
+    queryKey: ["attributes-admin", api],
     queryFn: async () => {
       const { data } = await axiosSecure.get(api);
-      setTotalCategorieNumber(data?.totalCategories);
+      setTotalAttributeNumber(data?.totalAttributes);
       return data?.data;
     },
   });
@@ -60,33 +59,27 @@ const CategoriesTable = () => {
     // create query object
     const queryObject = {
       page: activePageNumber,
-      size: parPageCategorie,
+      size: parPageAttribute,
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(status && { status }),
-      ...(featured && { featured }),
       ...(sort && { sort }),
     };
 
     // create query string
     const url = queryString.stringifyUrl({
-      url: "/api/categories",
+      url: "/api/product-attributes",
       query: queryObject,
     });
 
     setApi(url);
-  }, [
-    activePageNumber,
-    parPageCategorie,
-    debouncedSearch,
-    status,
-    featured,
-    sort,
-  ]);
+  }, [activePageNumber, parPageAttribute, debouncedSearch, status, sort]);
 
   // handle delete
   const handleDelete = async (id) => {
     try {
-      const { data } = await axiosSecure.delete(`/api/categories/${id}`);
+      const { data } = await axiosSecure.delete(
+        `/api/product-attributes/${id}`
+      );
 
       if (data.success) {
         refetch();
@@ -105,8 +98,6 @@ const CategoriesTable = () => {
         setSearch={setSearch}
         status={status}
         setStatus={setStatus}
-        featured={featured}
-        setFeatured={setFeatured}
         sort={sort}
         setSort={setSort}
       />
@@ -116,10 +107,10 @@ const CategoriesTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">No.</TableHead>
-            <TableHead>Categorie Name</TableHead>
-            <TableHead>Slug/path Name</TableHead>
+            <TableHead>Attribute Name</TableHead>
+            <TableHead>Availability Scope</TableHead>
+            <TableHead>Priority</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Featured</TableHead>
             <TableHead>Added Date</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -156,14 +147,15 @@ const CategoriesTable = () => {
                   </TableCell>
                 </TableRow>
               ))
-            : categories?.map(
+            : attributes?.map(
                 (
                   {
                     _id,
+                    attribute_name,
+                    global_attribute,
                     categorie_name,
-                    slug_name,
                     status,
-                    featured_categorie,
+                    priority_number,
                     createdAt,
                   },
                   idx
@@ -172,19 +164,21 @@ const CategoriesTable = () => {
                     {/* serial number */}
                     <TableCell className="font-medium">{idx + 1}</TableCell>
 
-                    {/* categorie name */}
-                    <TableCell>{categorie_name}</TableCell>
+                    {/* attribute name */}
+                    <TableCell>{attribute_name}</TableCell>
 
-                    {/* categorie slug/path */}
-                    <TableCell>{slug_name}</TableCell>
+                    {/* availability scope */}
+                    <TableCell>
+                      {global_attribute === "yes"
+                        ? "Global"
+                        : categorie_name || "Not Selected"}
+                    </TableCell>
+
+                    {/* priority */}
+                    <TableCell>{priority_number}</TableCell>
 
                     {/* status */}
                     <TableCell className="capitalize">{status}</TableCell>
-
-                    {/* featured */}
-                    <TableCell className="capitalize">
-                      {featured_categorie}
-                    </TableCell>
 
                     {/* added date */}
                     <TableCell>
@@ -199,7 +193,7 @@ const CategoriesTable = () => {
                           variant="outline"
                           onClick={() =>
                             router.push(
-                              `/dashboard/categories/edit-categorie/${_id}`
+                              `/dashboard/attributes/edit-attribute/${_id}`
                             )
                           }
                           className="px-1 sm:px-[6px]"
@@ -211,7 +205,7 @@ const CategoriesTable = () => {
                         <Button
                           variant="outline"
                           onClick={() =>
-                            router.push(`/dashboard/categories/details/${_id}`)
+                            router.push(`/dashboard/attributes/details/${_id}`)
                           }
                           className="px-1 sm:px-[6px]"
                         >
@@ -222,7 +216,7 @@ const CategoriesTable = () => {
                         <DeleteAlert
                           handleDelete={handleDelete}
                           id={_id}
-                          label={"category"}
+                          label={"attribute"}
                         />
                       </div>
                     </TableCell>
@@ -234,12 +228,12 @@ const CategoriesTable = () => {
 
       {/* bottom filter */}
       <TableFooterFilter
-        totalItemsNumber={totalCategorieNumber}
-        itemsPerPage={parPageCategorie}
-        setParPageRows={setParPageCategorie}
+        totalItemsNumber={totalAttributeNumber}
+        itemsPerPage={parPageAttribute}
+        setParPageRows={setParPageAttribute}
       />
     </div>
   );
 };
 
-export default CategoriesTable;
+export default AttributesTable;
