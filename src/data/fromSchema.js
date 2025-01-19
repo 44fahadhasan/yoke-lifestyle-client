@@ -18,4 +18,18 @@ const categorieFormSchema = z.object({
   status: z.string(),
 });
 
-export { categorieFormSchema };
+// Schema for attribute form
+const attributeFormSchema = z.object({
+  attribute_name: z.string().min(1, "Attribute name is required."),
+  priority_number: z
+    .string()
+    .regex(/^\d+$/, "Priority number must be a valid number.")
+    .min(0, "Priority number must be at least 0."),
+
+  global_attribute: z.string(),
+  category_specific_attribute: z
+    .union([z.string(), z.literal(null)])
+    .default(null),
+});
+
+export { attributeFormSchema, categorieFormSchema };

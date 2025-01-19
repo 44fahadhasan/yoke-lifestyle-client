@@ -244,26 +244,24 @@ const CategoryFrom = ({
                               <CommandEmpty>No categorie found.</CommandEmpty>
 
                               <CommandGroup>
-                                {categoriesList?.map(
-                                  ({ value, label, _id }) => (
-                                    <CommandItem
-                                      key={_id}
-                                      value={label}
-                                      onSelect={() => {
-                                        form.setValue("parent_categorie", _id);
-                                      }}
-                                    >
-                                      {label}
-                                      <Check
-                                        className={`ml-auto ${
-                                          _id === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        }`}
-                                      />
-                                    </CommandItem>
-                                  )
-                                )}
+                                {categoriesList?.map(({ label, _id }) => (
+                                  <CommandItem
+                                    key={_id}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue("parent_categorie", _id);
+                                    }}
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`ml-auto ${
+                                        _id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      }`}
+                                    />
+                                  </CommandItem>
+                                ))}
                               </CommandGroup>
                             </CommandList>
                           </Command>
