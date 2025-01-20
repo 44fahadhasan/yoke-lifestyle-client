@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { featureds } from "@/data/data";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 
@@ -200,6 +201,31 @@ const CategoryFrom = ({
                 )}
               </div>
 
+              {/* priority number */}
+              <div className="col-span-1 xs:col-span-2">
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full rounded-md" />
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="priority_number"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Priority Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="bg-primary-foreground"
+                            placeholder="Write priority number"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
+
               {/* parent categories */}
               {isLoading ? (
                 <Skeleton className="h-10 w-full rounded-md" />
@@ -284,22 +310,60 @@ const CategoryFrom = ({
                   control={form.control}
                   name="featured_categorie"
                   render={({ field }) => (
-                    <FormItem className="space-y-1 xs:-mt-[5px]">
+                    <FormItem className="flex flex-col">
                       <FormLabel>Featured Categorie</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-primary-foreground">
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="yes">Yes</SelectItem>
-                          <SelectItem value="no">No</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Popover>
+                        {/* trigger */}
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
+                            >
+                              {/* selected value */}
+                              {field.value}
+
+                              {/* icon */}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="p-0">
+                          <Command>
+                            {/* lists */}
+                            <CommandList>
+                              <CommandGroup>
+                                {featureds.map(({ value, label }) => (
+                                  <CommandItem
+                                    key={value}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue(
+                                        "featured_categorie",
+                                        value
+                                      );
+                                    }}
+                                    className="capitalize"
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`
+                                          ml-auto ${
+                                            value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          }
+                                        `}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                     </FormItem>
                   )}
                 />

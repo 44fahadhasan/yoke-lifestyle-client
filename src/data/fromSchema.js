@@ -13,6 +13,10 @@ const categorieFormSchema = z.object({
       "Slug name can only contain lowercase letters and hyphens."
     ),
   categorie_description: z.string(),
+  priority_number: z
+    .string()
+    .regex(/^\d+$/, "Priority number must be a valid number.")
+    .min(0, "Priority number must be at least 0."),
   parent_categorie: z.union([z.string(), z.literal(null)]).default(null),
   featured_categorie: z.string(),
   status: z.string(),

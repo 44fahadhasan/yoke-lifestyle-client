@@ -147,7 +147,7 @@ const TableHeaderFilter = ({
                       <Button
                         variant="outline"
                         role="combobox"
-                        className={`w-[150px] flex justify-between hover:bg-primary-foreground 
+                        className={`capitalize w-[150px] flex justify-between hover:bg-primary-foreground 
                                   ${!field.value && "text-muted-foreground"}
                                 )`}
                       >
@@ -173,6 +173,7 @@ const TableHeaderFilter = ({
                                 form.setValue("featured", value);
                                 setFeatured(value);
                               }}
+                              className="capitalize"
                             >
                               {label}
                               <Check

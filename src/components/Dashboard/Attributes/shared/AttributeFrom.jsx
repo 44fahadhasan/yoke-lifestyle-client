@@ -158,7 +158,7 @@ const AttributeFrom = ({
                               className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
                             >
                               {/* selected value */}
-                              {field.value ? field.value : "Filter by	scope"}
+                              {field.value}
 
                               {/* icon */}
                               <ChevronsUpDown className="opacity-50" />

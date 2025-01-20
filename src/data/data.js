@@ -115,8 +115,8 @@ const nameTags = metaTags.filter(({ name }) => name);
 const propertyTags = metaTags.filter(({ property }) => property);
 
 const featureds = [
-  { value: "No", label: "No" },
-  { value: "Yes", label: "Yes" },
+  { value: "no", label: "no" },
+  { value: "yes", label: "yes" },
 ];
 
 const sorts = [

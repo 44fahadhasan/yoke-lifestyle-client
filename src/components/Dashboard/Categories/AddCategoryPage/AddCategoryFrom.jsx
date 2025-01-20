@@ -38,6 +38,7 @@ const AddCategoryFrom = () => {
       categorie_name: "",
       slug_name: "",
       categorie_description: "",
+      priority_number: "0",
       parent_categorie: null,
       featured_categorie: "no",
       status: "published",
@@ -49,6 +50,7 @@ const AddCategoryFrom = () => {
     // payload data
     const payload = {
       ...data,
+      priority_number: Number(data.priority_number),
       image_url: addedImageValue,
       meta_info: metaData,
       email: auth.email,
