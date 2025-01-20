@@ -118,8 +118,9 @@ const CategoriesTable = () => {
             <TableHead className="w-[100px]">No.</TableHead>
             <TableHead>Categorie Name</TableHead>
             <TableHead>Slug/path Name</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Priority</TableHead>
             <TableHead>Featured</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Added Date</TableHead>
             <TableHead className="text-center">Action</TableHead>
           </TableRow>
@@ -162,6 +163,7 @@ const CategoriesTable = () => {
                     _id,
                     categorie_name,
                     slug_name,
+                    priority_number,
                     status,
                     featured_categorie,
                     createdAt,
@@ -178,13 +180,16 @@ const CategoriesTable = () => {
                     {/* categorie slug/path */}
                     <TableCell>{slug_name}</TableCell>
 
-                    {/* status */}
-                    <TableCell className="capitalize">{status}</TableCell>
+                    {/* priority */}
+                    <TableCell>{priority_number}</TableCell>
 
                     {/* featured */}
                     <TableCell className="capitalize">
                       {featured_categorie}
                     </TableCell>
+
+                    {/* status */}
+                    <TableCell className="capitalize">{status}</TableCell>
 
                     {/* added date */}
                     <TableCell>
