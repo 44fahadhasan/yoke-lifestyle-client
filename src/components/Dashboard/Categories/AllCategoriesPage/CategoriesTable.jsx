@@ -146,6 +146,9 @@ const CategoriesTable = () => {
                     <Skeleton className="w-[100px] h-[35px]" />
                   </TableCell>
                   <TableCell>
+                    <Skeleton className="w-[100px] h-[35px]" />
+                  </TableCell>
+                  <TableCell>
                     <Skeleton className="w-[150px] h-[35px]" />
                   </TableCell>
                   <TableCell className="text-center">
