@@ -261,7 +261,10 @@ const AttributeFrom = ({
               {/* attribute value */}
               <div className="col-span-1 sm:col-span-2">
                 {isLoading ? (
-                  <Skeleton className="h-10 w-full rounded-md" />
+                  <div className="flex gap-2 mb-2">
+                    <Skeleton className="h-10 w-[80%] xs:w-[90%] rounded-md" />
+                    <Skeleton className="h-10 w-[20%] xs:w-[10%] rounded-md" />
+                  </div>
                 ) : (
                   <>
                     {inputs.map(({ _id, value }) => (

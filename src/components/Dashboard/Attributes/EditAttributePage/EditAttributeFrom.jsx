@@ -5,18 +5,21 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import AttributeFrom from "../shared/AttributeFrom";
 
-const AddAttributeFrom = () => {
+const EditAttributeFrom = () => {
   const [loading, setLoading] = useState(false);
   const [inputs, setInputs] = useState([{ _id: uuidv4(), value: "" }]);
   const [attributeValues, setAttributeValues] = useState([]);
   const [categorieName, setCategorieName] = useState(null);
 
+  const { id } = useParams();
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
@@ -26,10 +29,44 @@ const AddAttributeFrom = () => {
     resolver: zodResolver(attributeFormSchema),
     defaultValues: {
       attribute_name: "",
-      priority_number: "0",
-      global_attribute: "yes",
+      priority_number: "",
+      global_attribute: "",
       category_specific_attribute: null,
-      status: "published",
+      status: "",
+    },
+  });
+
+  // fetch product attribute
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["product-attribute", id],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/api/product-attributes/details/${id}`
+      );
+
+      const {
+        attribute_name,
+        priority_number,
+        global_attribute,
+        category_specific_attribute,
+        status,
+        categorie_name,
+        attribute_values,
+      } = data?.data || {};
+
+      setInputs(attribute_values);
+      setCategorieName(categorie_name);
+
+      // set default values of form input filed
+      form.reset({
+        attribute_name,
+        priority_number: priority_number.toString(),
+        global_attribute,
+        category_specific_attribute,
+        status,
+      });
+
+      return data?.data;
     },
   });
 
@@ -47,14 +84,13 @@ const AddAttributeFrom = () => {
     try {
       setLoading(true);
 
-      const { data } = await axiosSecure.post(
-        "/api/product-attributes",
+      const { data } = await axiosSecure.put(
+        `/api/product-attributes/${id}`,
         payload
       );
 
       if (data.success) {
-        form.reset();
-        setInputs([{ _id: uuidv4(), value: "" }]);
+        refetch();
 
         popupToast({
           title: `Great job! ${data.message}`,
@@ -63,24 +99,6 @@ const AddAttributeFrom = () => {
         });
       }
     } catch ({ response }) {
-      const { keyPattern, keyValue } =
-        response?.data?.error?.errorResponse || {};
-
-      if (keyPattern?.attribute_name && keyValue?.attribute_name) {
-        return toast.error(
-          `The ${keyValue?.attribute_name} attribute is already exists. Please choose another name.`
-        );
-      }
-
-      if (
-        keyPattern["attribute_values.value"] &&
-        keyValue["attribute_values.value"]
-      ) {
-        return toast.error(
-          `The ${keyValue["attribute_values.value"]} attribute value is already exists. Please choose another name.`
-        );
-      }
-
       toast.error(response?.data?.message);
     } finally {
       setLoading(false);
@@ -103,6 +121,7 @@ const AddAttributeFrom = () => {
       form={form}
       onSubmit={onSubmit}
       loading={loading}
+      isLoading={isLoading}
       inputs={inputs}
       setInputs={setInputs}
       setCategorieName={setCategorieName}
@@ -110,4 +129,4 @@ const AddAttributeFrom = () => {
   );
 };
 
-export default AddAttributeFrom;
+export default EditAttributeFrom;
