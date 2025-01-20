@@ -26,6 +26,7 @@ import TableHeaderFilter from "./TableHeaderFilter";
 const AttributesTable = () => {
   const [api, setApi] = useState("/api/product-attributes");
   const [search, setSearch] = useState("");
+  const [AvailabilityScope, setAvailabilityScope] = useState("");
   const [status, setStatus] = useState("");
   const [sort, setSort] = useState("");
 
@@ -61,6 +62,7 @@ const AttributesTable = () => {
       page: activePageNumber,
       size: parPageAttribute,
       ...(debouncedSearch && { search: debouncedSearch }),
+      ...(AvailabilityScope && { scope: AvailabilityScope }),
       ...(status && { status }),
       ...(sort && { sort }),
     };
@@ -72,7 +74,14 @@ const AttributesTable = () => {
     });
 
     setApi(url);
-  }, [activePageNumber, parPageAttribute, debouncedSearch, status, sort]);
+  }, [
+    activePageNumber,
+    parPageAttribute,
+    debouncedSearch,
+    AvailabilityScope,
+    status,
+    sort,
+  ]);
 
   // handle delete
   const handleDelete = async (id) => {
@@ -96,6 +105,8 @@ const AttributesTable = () => {
       <TableHeaderFilter
         search={search}
         setSearch={setSearch}
+        AvailabilityScope={AvailabilityScope}
+        setAvailabilityScope={setAvailabilityScope}
         status={status}
         setStatus={setStatus}
         sort={sort}
@@ -152,7 +163,7 @@ const AttributesTable = () => {
                   {
                     _id,
                     attribute_name,
-                    global_attribute,
+                    availability_scope,
                     categorie_name,
                     status,
                     priority_number,
@@ -169,7 +180,7 @@ const AttributesTable = () => {
 
                     {/* availability scope */}
                     <TableCell>
-                      {global_attribute === "yes"
+                      {availability_scope === "global"
                         ? "Global"
                         : categorie_name || "Not Selected"}
                     </TableCell>

@@ -30,7 +30,7 @@ const EditAttributeFrom = () => {
     defaultValues: {
       attribute_name: "",
       priority_number: "",
-      global_attribute: "",
+      availability_scope: "",
       category_specific_attribute: null,
       status: "",
     },
@@ -47,7 +47,7 @@ const EditAttributeFrom = () => {
       const {
         attribute_name,
         priority_number,
-        global_attribute,
+        availability_scope,
         category_specific_attribute,
         status,
         categorie_name,
@@ -61,7 +61,7 @@ const EditAttributeFrom = () => {
       form.reset({
         attribute_name,
         priority_number: priority_number.toString(),
-        global_attribute,
+        availability_scope,
         category_specific_attribute,
         status,
       });

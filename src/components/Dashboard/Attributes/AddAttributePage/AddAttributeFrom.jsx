@@ -27,7 +27,7 @@ const AddAttributeFrom = () => {
     defaultValues: {
       attribute_name: "",
       priority_number: "0",
-      global_attribute: "yes",
+      availability_scope: "global",
       category_specific_attribute: null,
       status: "published",
     },

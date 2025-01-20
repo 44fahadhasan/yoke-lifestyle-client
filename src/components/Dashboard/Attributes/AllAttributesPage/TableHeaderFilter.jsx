@@ -12,13 +12,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { sorts, statuss } from "@/data/data";
+import {
+  availabilityScope as availabilityScopeData,
+  sorts,
+  statuss,
+} from "@/data/data";
 import { Check, ChevronsUpDown, SearchX } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 const TableHeaderFilter = ({
   search,
   setSearch,
+  AvailabilityScope,
+  setAvailabilityScope,
   status,
   setStatus,
   sort,
@@ -28,6 +34,7 @@ const TableHeaderFilter = ({
   const form = useForm({
     defaultValues: {
       search: "",
+      availability_scope: "",
       status: "",
       sort: "",
     },
@@ -38,6 +45,7 @@ const TableHeaderFilter = ({
     form.reset();
 
     setSearch("");
+    setAvailabilityScope("");
     setStatus("");
     setSort("");
   };
@@ -68,6 +76,68 @@ const TableHeaderFilter = ({
               )}
             />
           </div>
+
+          {/* filter by availability scope */}
+          <FormField
+            control={form.control}
+            name="availability_scope"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Popover>
+                  {/* trigger */}
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={`capitalize w-[150px] flex justify-between hover:bg-primary-foreground 
+                                  ${!field.value && "text-muted-foreground"}
+                                )`}
+                      >
+                        {/* selected value */}
+                        {field.value ? field.value : "Filter by	scope"}
+
+                        {/* icon */}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+
+                  <PopoverContent className="p-0 w-[150px]">
+                    <Command>
+                      {/* lists */}
+                      <CommandList>
+                        <CommandGroup>
+                          {availabilityScopeData.map(({ value, label }) => (
+                            <CommandItem
+                              key={value}
+                              value={label}
+                              onSelect={() => {
+                                form.setValue("availability_scope", value);
+                                setAvailabilityScope(value);
+                              }}
+                              className="capitalize"
+                            >
+                              {label}
+                              <Check
+                                className={`
+                                          ml-auto ${
+                                            value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          }
+                                        `}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </FormItem>
+            )}
+          />
 
           {/* filter by status */}
           <FormField
@@ -192,7 +262,7 @@ const TableHeaderFilter = ({
           />
 
           {/* clear all button */}
-          {(search || status || sort) && (
+          {(search || AvailabilityScope || status || sort) && (
             <Button type="submit" variant="outline" className="border-none">
               Clear All
               <SearchX />

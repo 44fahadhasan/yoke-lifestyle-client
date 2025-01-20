@@ -25,8 +25,7 @@ const attributeFormSchema = z.object({
     .string()
     .regex(/^\d+$/, "Priority number must be a valid number.")
     .min(0, "Priority number must be at least 0."),
-
-  global_attribute: z.string(),
+  availability_scope: z.string(),
   category_specific_attribute: z
     .union([z.string(), z.literal(null)])
     .default(null),

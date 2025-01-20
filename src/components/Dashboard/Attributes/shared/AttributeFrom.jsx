@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { availabilityScope } from "@/data/data";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, Plus, Trash2 } from "lucide-react";
@@ -77,13 +78,13 @@ const AttributeFrom = ({
     },
   });
 
-  // set value null to category specific attribute when global attribute selected yes
+  // set value null to category specific attribute when availability scope selected global
   useEffect(() => {
-    const globalAttributeValue = form.getValues("global_attribute");
-    if (globalAttributeValue === "yes") {
+    const availabilityScope = form.getValues("availability_scope");
+    if (availabilityScope.toLowerCase() === "global") {
       form.setValue("category_specific_attribute", null);
     }
-  }, [form.watch("global_attribute")]);
+  }, [form.watch("availability_scope")]);
 
   return (
     <Form {...form}>
@@ -137,33 +138,71 @@ const AttributeFrom = ({
                 />
               )}
 
-              {/* global attribute */}
+              {/* availability scope */}
               {isLoading ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
                 <FormField
                   control={form.control}
-                  name="global_attribute"
+                  name="availability_scope"
                   render={({ field }) => (
-                    <FormItem className="space-y-1 sm:-mt-[5px]">
-                      <FormLabel>Global Attribute</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="bg-primary-foreground">
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="yes">Yes</SelectItem>
-                          <SelectItem value="no">No</SelectItem>
-                        </SelectContent>
-                      </Select>
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Availability Scope</FormLabel>
+                      <Popover>
+                        {/* trigger */}
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
+                            >
+                              {/* selected value */}
+                              {field.value ? field.value : "Filter by	scope"}
+
+                              {/* icon */}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="p-0">
+                          <Command>
+                            {/* lists */}
+                            <CommandList>
+                              <CommandGroup>
+                                {availabilityScope.map(({ value, label }) => (
+                                  <CommandItem
+                                    key={value}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue(
+                                        "availability_scope",
+                                        value
+                                      );
+                                    }}
+                                    className="capitalize"
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`
+                                          ml-auto ${
+                                            value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          }
+                                        `}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                       <FormDescription>
-                        Select "Yes" to apply this attribute to all categories;
-                        otherwise, select "No".
+                        Select "Global" to apply this attribute to all
+                        categories; otherwise, select "Category".
                       </FormDescription>
                     </FormItem>
                   )}
@@ -179,7 +218,8 @@ const AttributeFrom = ({
                   name="category_specific_attribute"
                   render={({ field }) => {
                     const isDisabled =
-                      form.getValues("global_attribute") === "yes";
+                      form.getValues("availability_scope").toLowerCase() ===
+                      "global";
 
                     return (
                       <FormItem className="flex flex-col">
@@ -249,7 +289,7 @@ const AttributeFrom = ({
                           </PopoverContent>
                         </Popover>
                         <FormDescription>
-                          Select "No" for Global Attribute, then choose a
+                          Select "Category" for Global Attribute, then choose a
                           specific category to apply the attribute.
                         </FormDescription>
                       </FormItem>

@@ -130,4 +130,17 @@ const statuss = [
   { value: "Draft", label: "Draft" },
 ];
 
-export { featureds, metaTags, nameTags, propertyTags, sorts, statuss };
+const availabilityScope = [
+  { value: "global", label: "global" },
+  { value: "category", label: "category" },
+];
+
+export {
+  availabilityScope,
+  featureds,
+  metaTags,
+  nameTags,
+  propertyTags,
+  sorts,
+  statuss,
+};
