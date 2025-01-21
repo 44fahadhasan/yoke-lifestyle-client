@@ -147,12 +147,16 @@ const TableHeaderFilter = ({
                       <Button
                         variant="outline"
                         role="combobox"
-                        className={`capitalize w-[150px] flex justify-between hover:bg-primary-foreground 
+                        className={`w-[150px] flex justify-between hover:bg-primary-foreground 
                                   ${!field.value && "text-muted-foreground"}
                                 )`}
                       >
                         {/* selected value */}
-                        {field.value ? field.value : "Filter by	featured"}
+                        {field.value ? (
+                          <span className="capitalize">{field.value}</span>
+                        ) : (
+                          "Filter by	featured"
+                        )}
 
                         {/* icon */}
                         <ChevronsUpDown className="opacity-50" />
