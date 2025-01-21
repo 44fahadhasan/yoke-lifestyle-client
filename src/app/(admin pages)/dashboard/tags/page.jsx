@@ -1,15 +1,33 @@
 "use client";
-import TypographyH3 from "@/components/reusable/Typography/TypographyH3";
+import TagsTable from "@/components/Dashboard/Tags/AllTagsPage/TagsTable";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import useDataHandler from "@/hooks/useDataHandler";
 import { CirclePlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const AllTagsPage = () => {
   const router = useRouter();
+  const { totalTagNumber } = useDataHandler();
 
   return (
-    <section>
-      <div className="flex justify-around">
+    <Card>
+      <CardHeader className="flex flex-col gap-3 xs:flex-row justify-between">
+        {/* content */}
+        <div className="space-y-1.5">
+          <CardTitle className="sm:text-2xl">
+            {`Available Tags (${totalTagNumber})`}
+          </CardTitle>
+          <CardDescription>Explore your published tags</CardDescription>
+        </div>
+
+        {/* add button */}
         <Button
           variant="outline"
           onClick={() => router.push("/dashboard/tags/add-tag")}
@@ -17,10 +35,13 @@ const AllTagsPage = () => {
           <CirclePlus />
           Add New Tag
         </Button>
+      </CardHeader>
 
-        <TypographyH3>(0) Tags Published</TypographyH3>
-      </div>
-    </section>
+      {/* table */}
+      <CardContent>
+        <TagsTable />
+      </CardContent>
+    </Card>
   );
 };
 

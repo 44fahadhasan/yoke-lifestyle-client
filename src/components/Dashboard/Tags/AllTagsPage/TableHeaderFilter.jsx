@@ -65,7 +65,7 @@ const TableHeaderFilter = ({
                         setSearch(e.target.value);
                       }}
                       className="text-ellipsis"
-                      placeholder="Search by categorie name or slug/path"
+                      placeholder="Search by tag name or slug/path"
                     />
                   </FormControl>
                 </FormItem>

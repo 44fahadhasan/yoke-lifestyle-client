@@ -23,8 +23,8 @@ import DeleteAlert from "../../shared/DeleteAlert/DeleteAlert";
 import TableFooterFilter from "../../shared/TableFooter/TableFooterFilter";
 import TableHeaderFilter from "./TableHeaderFilter";
 
-const CategoriesTable = () => {
-  const [api, setApi] = useState("/api/categories");
+const TagsTable = () => {
+  const [api, setApi] = useState("/api/tags");
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
   const [featured, setFeatured] = useState("");
@@ -32,25 +32,25 @@ const CategoriesTable = () => {
 
   const {
     activePageNumber,
-    totalCategorieNumber,
-    setTotalCategorieNumber,
-    parPageCategorie,
-    setParPageCategorie,
+    totalTagNumber,
+    setTotalTagNumber,
+    parPageTag,
+    setParPageTag,
   } = useDataHandler();
   const router = useRouter();
   const axiosSecure = useAxiosSecure();
   const debouncedSearch = useDebounce(search);
 
-  // fetch categories
+  // fetch tags
   const {
-    data: categories = [],
+    data: tags = [],
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["categories-admin", api],
+    queryKey: ["tags-admin", api],
     queryFn: async () => {
       const { data } = await axiosSecure.get(api);
-      setTotalCategorieNumber(data?.totalCategories);
+      setTotalTagNumber(data?.totalTags);
       return data?.data;
     },
   });
@@ -60,7 +60,7 @@ const CategoriesTable = () => {
     // create query object
     const queryObject = {
       page: activePageNumber,
-      size: parPageCategorie,
+      size: parPageTag,
       ...(debouncedSearch && { search: debouncedSearch }),
       ...(status && { status }),
       ...(featured && { featured }),
@@ -69,24 +69,17 @@ const CategoriesTable = () => {
 
     // create query string
     const url = queryString.stringifyUrl({
-      url: "/api/categories",
+      url: "/api/tags",
       query: queryObject,
     });
 
     setApi(url);
-  }, [
-    activePageNumber,
-    parPageCategorie,
-    debouncedSearch,
-    status,
-    featured,
-    sort,
-  ]);
+  }, [activePageNumber, parPageTag, debouncedSearch, status, featured, sort]);
 
   // handle delete
   const handleDelete = async (id) => {
     try {
-      const { data } = await axiosSecure.delete(`/api/categories/${id}`);
+      const { data } = await axiosSecure.delete(`/api/tags/${id}`);
 
       if (data.success) {
         refetch();
@@ -116,7 +109,7 @@ const CategoriesTable = () => {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">No.</TableHead>
-            <TableHead>Categorie Name</TableHead>
+            <TableHead>Tag Name</TableHead>
             <TableHead>Slug/path Name</TableHead>
             <TableHead>Priority</TableHead>
             <TableHead>Featured</TableHead>
@@ -160,15 +153,15 @@ const CategoriesTable = () => {
                   </TableCell>
                 </TableRow>
               ))
-            : categories?.map(
+            : tags?.map(
                 (
                   {
                     _id,
-                    categorie_name,
+                    tag_name,
                     slug_name,
                     priority_number,
                     status,
-                    featured_categorie,
+                    featured_tag,
                     createdAt,
                   },
                   idx
@@ -177,19 +170,17 @@ const CategoriesTable = () => {
                     {/* serial number */}
                     <TableCell className="font-medium">{idx + 1}</TableCell>
 
-                    {/* categorie name */}
-                    <TableCell>{categorie_name}</TableCell>
+                    {/* tag name */}
+                    <TableCell>{tag_name}</TableCell>
 
-                    {/* categorie slug/path */}
+                    {/* tag slug/path */}
                     <TableCell>{slug_name}</TableCell>
 
                     {/* priority */}
                     <TableCell>{priority_number}</TableCell>
 
                     {/* featured */}
-                    <TableCell className="capitalize">
-                      {featured_categorie}
-                    </TableCell>
+                    <TableCell className="capitalize">{featured_tag}</TableCell>
 
                     {/* status */}
                     <TableCell className="capitalize">{status}</TableCell>
@@ -206,9 +197,7 @@ const CategoriesTable = () => {
                         <Button
                           variant="outline"
                           onClick={() =>
-                            router.push(
-                              `/dashboard/categories/edit-categorie/${_id}`
-                            )
+                            router.push(`/dashboard/tags/edit-tag/${_id}`)
                           }
                           className="px-1 sm:px-[6px]"
                         >
@@ -219,7 +208,7 @@ const CategoriesTable = () => {
                         <Button
                           variant="outline"
                           onClick={() =>
-                            router.push(`/dashboard/categories/details/${_id}`)
+                            router.push(`/dashboard/tags/details/${_id}`)
                           }
                           className="px-1 sm:px-[6px]"
                         >
@@ -230,7 +219,7 @@ const CategoriesTable = () => {
                         <DeleteAlert
                           handleDelete={handleDelete}
                           id={_id}
-                          label={"category"}
+                          label={"tag"}
                         />
                       </div>
                     </TableCell>
@@ -242,12 +231,12 @@ const CategoriesTable = () => {
 
       {/* bottom filter */}
       <TableFooterFilter
-        totalItemsNumber={totalCategorieNumber}
-        itemsPerPage={parPageCategorie}
-        setParPageRows={setParPageCategorie}
+        totalItemsNumber={totalTagNumber}
+        itemsPerPage={parPageTag}
+        setParPageRows={setParPageTag}
       />
     </div>
   );
 };
 
-export default CategoriesTable;
+export default TagsTable;
