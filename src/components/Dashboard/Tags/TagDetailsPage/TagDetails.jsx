@@ -3,21 +3,21 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-const CategorieDetails = () => {
+const TagDetails = () => {
   const { id } = useParams();
   const axiosSecure = useAxiosSecure();
 
-  // fetch categorie
-  const { data: categorie = {}, isLoading } = useQuery({
-    queryKey: ["categorie-details", id],
+  // fetch tag
+  const { data: tag = {}, isLoading } = useQuery({
+    queryKey: ["tag-details", id],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/api/categories/details/${id}`);
+      const { data } = await axiosSecure.get(`/api/tags/details/${id}`);
 
       return data?.data;
     },
   });
 
-  return <div>{categorie.email}</div>;
+  return <div>{tag.email}</div>;
 };
 
-export default CategorieDetails;
+export default TagDetails;
