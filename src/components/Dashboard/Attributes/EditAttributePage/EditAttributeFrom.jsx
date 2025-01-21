@@ -29,7 +29,7 @@ const EditAttributeFrom = () => {
     resolver: zodResolver(attributeFormSchema),
     defaultValues: {
       attribute_name: "",
-      priority_number: "",
+      priority_number: "0",
       availability_scope: "",
       category_specific_attribute: null,
       status: "",

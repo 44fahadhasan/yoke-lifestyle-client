@@ -1,6 +1,6 @@
 "use client";
 import { ToastAction } from "@/components/ui/toast";
-import { categorieFormSchema } from "@/data/fromSchema";
+import { tagFormSchema } from "@/data/fromSchema";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -10,10 +10,9 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import CategoryFrom from "../shared/TagFrom";
+import TagFrom from "../shared/TagFrom";
 
-const EditCategorieFrom = () => {
-  const [addedImageValue, setAddedImageValue] = useState("");
+const EditTagFrom = () => {
   const [metaData, setMetaData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,63 +23,54 @@ const EditCategorieFrom = () => {
 
   // handle default values of form
   const form = useForm({
-    resolver: zodResolver(categorieFormSchema),
+    resolver: zodResolver(tagFormSchema),
     defaultValues: {
-      img_alt: "",
-      img_caption: "",
-      categorie_name: "",
+      tag_name: "",
       slug_name: "",
-      categorie_description: "",
+      tag_description: "",
       priority_number: "",
-      parent_categorie: null,
-      featured_categorie: "",
+      parent_tag: null,
+      featured_tag: "",
       status: "",
     },
   });
 
-  // fetch categories list
-  const { data: categoriesList = [], refetch: refetchCategoriesList } =
-    useQuery({
-      queryKey: ["categories-list"],
-      queryFn: async () => {
-        const { data } = await axiosSecure.get("/api/categories/list");
-        return data?.data;
-      },
-    });
-
-  // fetch categorie
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["categorie-details", id],
+  // fetch tags list
+  const { data: tagsList = [], refetch: refetchTagsList } = useQuery({
+    queryKey: ["tags-list"],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/api/categories/details/${id}`);
+      const { data } = await axiosSecure.get("/api/tags/list");
+      return data?.data;
+    },
+  });
+
+  // fetch tag
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["tag-details", id],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/api/tags/details/${id}`);
 
       const {
-        image_url,
         meta_info,
-        img_alt,
-        img_caption,
-        categorie_name,
+        tag_name,
         slug_name,
-        categorie_description,
+        tag_description,
         priority_number,
-        featured_categorie,
-        parent_categorie,
+        featured_tag,
+        parent_tag,
         status,
       } = data?.data || {};
 
-      setAddedImageValue(image_url);
       setMetaData(meta_info);
 
       // set default values of form input filed
       form.reset({
-        img_alt,
-        img_caption,
-        categorie_name,
+        tag_name,
         slug_name,
-        categorie_description,
+        tag_description,
         priority_number: priority_number.toString(),
-        featured_categorie,
-        parent_categorie,
+        featured_tag,
+        parent_tag,
         status,
       });
 
@@ -93,7 +83,6 @@ const EditCategorieFrom = () => {
     // payload data
     const payload = {
       ...data,
-      image_url: addedImageValue,
       meta_info: metaData,
       email: auth.email,
     };
@@ -101,10 +90,10 @@ const EditCategorieFrom = () => {
     try {
       setLoading(true);
 
-      const { data } = await axiosSecure.put(`/api/categories/${id}`, payload);
+      const { data } = await axiosSecure.put(`/api/tags/${id}`, payload);
 
       if (data.success) {
-        refetchCategoriesList();
+        refetchTagsList();
         refetch();
 
         popupToast({
@@ -121,18 +110,16 @@ const EditCategorieFrom = () => {
   };
 
   return (
-    <CategoryFrom
+    <TagFrom
       form={form}
       onSubmit={onSubmit}
       loading={loading}
       isLoading={isLoading}
       metaData={metaData}
       setMetaData={setMetaData}
-      addedImageValue={addedImageValue}
-      setAddedImageValue={setAddedImageValue}
-      categoriesList={categoriesList}
+      tagsList={tagsList}
     />
   );
 };
 
-export default EditCategorieFrom;
+export default EditTagFrom;

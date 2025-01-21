@@ -1,5 +1,12 @@
-const EditTagPage = ({ params }) => {
-  return <div>EditTagPage: {params.id}</div>;
+import EditTagFrom from "@/components/Dashboard/Tags/EditTagPage/EditTagFrom";
+import { Card } from "@/components/ui/card";
+
+const EditTagPage = () => {
+  return (
+    <Card className="rounded shadow-none">
+      <EditTagFrom />
+    </Card>
+  );
 };
 
 export default EditTagPage;
