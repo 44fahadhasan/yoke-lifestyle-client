@@ -251,12 +251,12 @@ const AttributeFrom = ({
                             <Command>
                               {/* search input */}
                               <CommandInput
-                                placeholder="Search categorie..."
+                                placeholder="Search category..."
                                 className="h-9"
                               />
                               {/* lists */}
                               <CommandList>
-                                <CommandEmpty>No categorie found.</CommandEmpty>
+                                <CommandEmpty>No category found.</CommandEmpty>
 
                                 <CommandGroup>
                                   {categoriesList

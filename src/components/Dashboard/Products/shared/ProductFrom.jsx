@@ -15,7 +15,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,189 +34,78 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Textarea } from "@/components/ui/textarea";
 import { featureds } from "@/data/data";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, CircleX, Plus } from "lucide-react";
 import Image from "next/image";
+import { v4 as uuidv4 } from "uuid";
 
-const CategoryFrom = ({
+const ProductFrom = ({
   form,
   onSubmit,
   loading,
   isLoading,
   metaData,
   setMetaData,
-  addedImageValue,
-  setAddedImageValue,
+  sectionImage,
+  setSectionImage,
   categoriesList,
 }) => {
+  // add a new section
+  const handleAddNewSectionImage = () => {
+    setSectionImage((prevSectionImage) => [
+      ...prevSectionImage,
+      {
+        _id: uuidv4(),
+        image: "",
+      },
+    ]);
+  };
+
+  // update a specific section
+  const handleSectionImageSelect = (selectedImages, sectionId) => {
+    setSectionImage((prevSectionImage) =>
+      prevSectionImage.map((section) => {
+        if (section._id === sectionId) {
+          return {
+            ...section,
+            image: selectedImages,
+          };
+        }
+        return section;
+      })
+    );
+  };
+
+  // delete a section
+  const handleDeleteSectionImage = (sectionId) => {
+    setSectionImage((prevSectionImage) =>
+      prevSectionImage.filter((section) => section._id !== sectionId)
+    );
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* category fields */}
+        {/* basic info */}
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-4 lg:gap-x-6 bg-muted p-4">
-            {/* left column */}
-            <div className="col-span-1 flex flex-col gap-4 flex-grow">
-              {/* img */}
-              <div className="relative p-2 h-full w-full border-2 border-dashed border-primary min-h-52 sm:min-h-60 max-h-60">
-                {addedImageValue ? (
-                  <div className="relative h-full w-full">
-                    {/* img preview */}
-                    <Image
-                      src={addedImageValue}
-                      alt="categorie image preview"
-                      layout="fill"
-                      objectFit="cover"
-                      className="rounded-md"
-                    />
-
-                    {/* img add button */}
-                    <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300">
-                      <ImagePicker setAddedImageValue={setAddedImageValue} />
-                    </div>
-                  </div>
-                ) : isLoading ? (
-                  <Skeleton className="w-full h-full rounded-md" />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300 h-full">
-                    <ImagePicker setAddedImageValue={setAddedImageValue} />
-                  </div>
-                )}
-              </div>
-
-              {/* img alt text */}
-              {isLoading ? (
-                <Skeleton className="h-10 w-full rounded-md" />
-              ) : (
-                <FormField
-                  control={form.control}
-                  name="img_alt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-primary-foreground"
-                          placeholder="Write image alt text"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              )}
-
-              {/* img caption */}
-              {isLoading ? (
-                <Skeleton className="h-16 w-full rounded-md" />
-              ) : (
-                <FormField
-                  control={form.control}
-                  name="img_caption"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Textarea
-                          {...field}
-                          className="bg-primary-foreground"
-                          placeholder="Write image caption"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              )}
-            </div>
-
-            {/* right column */}
+          <div className="grid bg-muted p-4">
             <div className="col-span-1 xs:col-span-2 grid gap-4 xs:grid-cols-2 grid-cols-1">
-              {/* categorie name */}
-              {isLoading ? (
-                <Skeleton className="h-10 w-full rounded-md" />
-              ) : (
-                <FormField
-                  control={form.control}
-                  name="categorie_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Categorie Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-primary-foreground"
-                          placeholder="Write categorie name"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-
-              {/* slug name */}
-              {isLoading ? (
-                <Skeleton className="h-10 w-full rounded-md" />
-              ) : (
-                <FormField
-                  control={form.control}
-                  name="slug_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug/path Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-primary-foreground"
-                          placeholder="Write slug/path name"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-
-              {/* categorie description */}
-              <div className="col-span-1 xs:col-span-2">
-                {isLoading ? (
-                  <Skeleton className="h-24 w-full rounded-md" />
-                ) : (
-                  <FormField
-                    control={form.control}
-                    name="categorie_description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Categorie Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            rows={4}
-                            className="bg-primary-foreground"
-                            placeholder="Write categorie description"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                )}
-              </div>
-
-              {/* priority number */}
+              {/* product name */}
               <div className="col-span-1 xs:col-span-2">
                 {isLoading ? (
                   <Skeleton className="h-10 w-full rounded-md" />
                 ) : (
                   <FormField
                     control={form.control}
-                    name="priority_number"
+                    name="product_name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Priority Number</FormLabel>
+                        <FormLabel>Product Name</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             className="bg-primary-foreground"
-                            placeholder="Write priority number"
+                            placeholder="Write product name"
                           />
                         </FormControl>
                         <FormMessage />
@@ -227,16 +115,16 @@ const CategoryFrom = ({
                 )}
               </div>
 
-              {/* parent categories */}
+              {/* product category */}
               {isLoading ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
                 <FormField
                   control={form.control}
-                  name="parent_categorie"
+                  name="product_category"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Parent Categories</FormLabel>
+                      <FormLabel>Product category</FormLabel>
                       <Popover>
                         {/* trigger */}
                         <PopoverTrigger asChild>
@@ -251,7 +139,7 @@ const CategoryFrom = ({
                                 ? categoriesList?.find(
                                     ({ _id }) => _id === field.value
                                   )?.label || field.value
-                                : "Select parent categorie"}
+                                : "Select an category"}
 
                               {/* icon */}
                               <ChevronsUpDown className="opacity-50" />
@@ -263,56 +151,54 @@ const CategoryFrom = ({
                           <Command>
                             {/* search input */}
                             <CommandInput
-                              placeholder="Search categorie..."
+                              placeholder="Search category..."
                               className="h-9"
                             />
                             {/* lists */}
                             <CommandList>
-                              <CommandEmpty>No categorie found.</CommandEmpty>
+                              <CommandEmpty>No category found.</CommandEmpty>
 
                               <CommandGroup>
-                                {categoriesList?.map(({ label, _id }) => (
-                                  <CommandItem
-                                    key={_id}
-                                    value={label}
-                                    onSelect={() => {
-                                      form.setValue("parent_categorie", _id);
-                                    }}
-                                  >
-                                    {label}
-                                    <Check
-                                      className={`ml-auto ${
-                                        _id === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                  </CommandItem>
-                                ))}
+                                {categoriesList
+                                  .slice(1)
+                                  .map(({ label, _id }) => (
+                                    <CommandItem
+                                      key={_id}
+                                      value={label}
+                                      onSelect={() => {
+                                        form.setValue("product_category", _id);
+                                      }}
+                                    >
+                                      {label}
+                                      <Check
+                                        className={`ml-auto ${
+                                          _id === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        }`}
+                                      />
+                                    </CommandItem>
+                                  ))}
                               </CommandGroup>
                             </CommandList>
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>
-                        The category you are currently adding. If it has any
-                        parent category, please select one parent category.
-                      </FormDescription>
                     </FormItem>
                   )}
                 />
               )}
 
-              {/* feature categorie */}
+              {/* feature product */}
               {isLoading ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
                 <FormField
                   control={form.control}
-                  name="featured_categorie"
+                  name="featured_product"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Featured Categorie</FormLabel>
+                      <FormLabel>Featured Product</FormLabel>
                       <Popover>
                         {/* trigger */}
                         <PopoverTrigger asChild>
@@ -341,10 +227,7 @@ const CategoryFrom = ({
                                     key={value}
                                     value={label}
                                     onSelect={() => {
-                                      form.setValue(
-                                        "featured_categorie",
-                                        value
-                                      );
+                                      form.setValue("featured_product", value);
                                     }}
                                     className="capitalize"
                                   >
@@ -369,6 +252,114 @@ const CategoryFrom = ({
                   )}
                 />
               )}
+
+              {/* product images */}
+              <div className="col-span-1 xs:col-span-2 space-y-2">
+                {isLoading || <FormLabel>Product Images</FormLabel>}
+
+                <div className="grid grid-cols-4 gap-4">
+                  {isLoading ? (
+                    Array.from({ length: 4 }).map((_, idx) => (
+                      <Skeleton key={idx} className="w-full h-48 rounded-md" />
+                    ))
+                  ) : (
+                    <>
+                      {sectionImage.map((section) => (
+                        <div
+                          key={section._id}
+                          className="relative h-48 w-full border-2 border-dashed border-primary"
+                        >
+                          {/* remove section button */}
+                          <div className="absolute -top-2 -right-2 z-20">
+                            <div
+                              onClick={() =>
+                                handleDeleteSectionImage(section._id)
+                              }
+                              className="cursor-pointer bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full"
+                            >
+                              <CircleX />
+                            </div>
+                          </div>
+
+                          {/* single image */}
+                          {section?.image ? (
+                            <div className="relative h-full w-full">
+                              {/* img preview */}
+                              <Image
+                                src={section?.image}
+                                alt="product image preview"
+                                layout="fill"
+                                objectFit="cover"
+                                className="rounded-md"
+                              />
+
+                              {/* img add button */}
+                              <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300">
+                                <ImagePicker
+                                  setAddedImageValue={(selectedImages) =>
+                                    handleSectionImageSelect(
+                                      selectedImages,
+                                      section._id
+                                    )
+                                  }
+                                />
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300 h-full">
+                              <ImagePicker
+                                setAddedImageValue={(selectedImages) =>
+                                  handleSectionImageSelect(
+                                    selectedImages,
+                                    section._id
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* add section button */}
+                  {isLoading || (
+                    <div
+                      onClick={handleAddNewSectionImage}
+                      className={`h-48 w-full cursor-pointer flex items-center justify-center bg-primary-foreground border-2 border-dashed ${
+                        sectionImage.length === 8 && "hidden"
+                      }`}
+                    >
+                      <Plus size={33} />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* product video link */}
+              <div className="col-span-1 xs:col-span-2">
+                {isLoading ? (
+                  <Skeleton className="h-10 w-full rounded-md" />
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="product_video_link"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Product Video Link</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="bg-primary-foreground"
+                            placeholder="Paste product video link"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
@@ -431,4 +422,4 @@ const CategoryFrom = ({
   );
 };
 
-export default CategoryFrom;
+export default ProductFrom;

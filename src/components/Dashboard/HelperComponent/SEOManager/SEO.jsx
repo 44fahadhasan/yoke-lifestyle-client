@@ -275,7 +275,7 @@ const SEO = ({ metaData, setMetaData }) => {
             {/* add new section */}
             <div className="grid w-full items-center gap-1.5">
               <div
-                className="bg-primary-foreground p-2 hover:bg-muted cursor-pointer h-11 w-full border"
+                className="bg-primary-foreground p-2 hover:bg-muted cursor-pointer h-11 w-full border-2 border-dashed"
                 onClick={handleAddNewSection}
               >
                 <div className="flex items-center justify-center h-full">
