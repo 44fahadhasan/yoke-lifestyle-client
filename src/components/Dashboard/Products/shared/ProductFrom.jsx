@@ -3,7 +3,7 @@ import ImagePicker from "@/components/Dashboard/HelperComponent/ImageManager/Ima
 import SEO from "@/components/Dashboard/HelperComponent/SEOManager/SEO";
 import LoadingButton from "@/components/reusable/LoadingButton";
 import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Command,
   CommandEmpty,
@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { featureds } from "@/data/data";
 import { Check, ChevronsUpDown, CircleX, Plus } from "lucide-react";
 import Image from "next/image";
@@ -361,6 +362,50 @@ const ProductFrom = ({
                 )}
               </div>
             </div>
+          </div>
+        </CardContent>
+
+        <CardContent>
+          <div className="bg-muted p-4">
+            <Tabs defaultValue="product_variant">
+              {/* tab lists */}
+              <TabsList className="flex">
+                <TabsTrigger className="text-base" value="product_variant">
+                  Product Variant
+                </TabsTrigger>
+
+                <TabsTrigger className="text-base" value="product_description">
+                  Product Description
+                </TabsTrigger>
+
+                <TabsTrigger
+                  className="text-base"
+                  value="additional_information"
+                >
+                  Additional Information
+                </TabsTrigger>
+
+                <TabsTrigger className="text-base" value="shipping_warranty">
+                  Shipping & Warranty
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="product_variant">
+                <Card>jasfjl</Card>
+              </TabsContent>
+
+              <TabsContent value="product_description">
+                <Card>ksjklfsajdlf</Card>
+              </TabsContent>
+
+              <TabsContent value="additional_information">
+                <Card>ajflhasf</Card>
+              </TabsContent>
+
+              <TabsContent value="shipping_warranty">
+                <Card>ajslfjaslkjf</Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </CardContent>
 
