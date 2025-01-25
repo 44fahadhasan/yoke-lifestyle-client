@@ -39,6 +39,7 @@ import { featureds } from "@/data/data";
 import { Check, ChevronsUpDown, CircleX, Plus } from "lucide-react";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
+import TextEditor from "../../HelperComponent/TextEditor/TextEditor";
 
 const ProductFrom = ({
   form,
@@ -50,6 +51,12 @@ const ProductFrom = ({
   sectionImage,
   setSectionImage,
   categoriesList,
+  productDescription,
+  setProductDescription,
+  additionalInformation,
+  setAdditionalInformation,
+  shippingWarranty,
+  setShippingWarranty,
 }) => {
   // add a new section
   const handleAddNewSectionImage = () => {
@@ -390,20 +397,39 @@ const ProductFrom = ({
                 </TabsTrigger>
               </TabsList>
 
+              {/* product variant */}
               <TabsContent value="product_variant">
-                <Card>jasfjl</Card>
+                <Card className="shadow-none border-none">product variant</Card>
               </TabsContent>
 
+              {/* product description */}
               <TabsContent value="product_description">
-                <Card>ksjklfsajdlf</Card>
+                <Card className="shadow-none border-none">
+                  <TextEditor
+                    content={productDescription}
+                    setContent={setProductDescription}
+                  />
+                </Card>
               </TabsContent>
 
+              {/* additional information */}
               <TabsContent value="additional_information">
-                <Card>ajflhasf</Card>
+                <Card className="shadow-none border-none">
+                  <TextEditor
+                    content={additionalInformation}
+                    setContent={setAdditionalInformation}
+                  />
+                </Card>
               </TabsContent>
 
+              {/* shipping & warranty */}
               <TabsContent value="shipping_warranty">
-                <Card>ajslfjaslkjf</Card>
+                <Card className="shadow-none border-none">
+                  <TextEditor
+                    content={shippingWarranty}
+                    setContent={setShippingWarranty}
+                  />
+                </Card>
               </TabsContent>
             </Tabs>
           </div>

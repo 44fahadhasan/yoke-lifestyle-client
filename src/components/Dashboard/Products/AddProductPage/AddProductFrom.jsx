@@ -21,6 +21,9 @@ const AddProductFrom = () => {
   ]);
   const [metaData, setMetaData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [productDescription, setProductDescription] = useState("");
+  const [additionalInformation, setAdditionalInformation] = useState("");
+  const [shippingWarranty, setShippingWarranty] = useState("");
 
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
@@ -105,6 +108,12 @@ const AddProductFrom = () => {
       setSectionImage={setSectionImage}
       categoriesList={categoriesList}
       isLoading={!true}
+      productDescription={productDescription}
+      setProductDescription={setProductDescription}
+      additionalInformation={additionalInformation}
+      setAdditionalInformation={setAdditionalInformation}
+      shippingWarranty={shippingWarranty}
+      setShippingWarranty={setShippingWarranty}
     />
   );
 };
