@@ -16,6 +16,10 @@ const DataProvider = ({ children }) => {
   const [totalTagNumber, setTotalTagNumber] = useState(0);
   const [parPageTag, setParPageTag] = useState(6);
 
+  // brands state
+  const [totalBrandNumber, setTotalBrandNumber] = useState(0);
+  const [parPageBrand, setParPageBrand] = useState(6);
+
   // attributes state
   const [totalAttributeNumber, setTotalAttributeNumber] = useState(0);
   const [parPageAttribute, setParPageAttribute] = useState(6);
@@ -33,6 +37,10 @@ const DataProvider = ({ children }) => {
     setTotalTagNumber,
     parPageTag,
     setParPageTag,
+    totalBrandNumber,
+    setTotalBrandNumber,
+    parPageBrand,
+    setParPageBrand,
     totalAttributeNumber,
     setTotalAttributeNumber,
     parPageAttribute,

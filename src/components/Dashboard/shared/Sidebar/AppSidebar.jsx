@@ -7,6 +7,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import {
+  BadgeCheck,
   ChartBarStacked,
   HousePlus,
   LayoutDashboard,
@@ -57,6 +58,11 @@ const data = {
           title: "Attributes",
           url: "/dashboard/attributes",
           icon: TableProperties,
+        },
+        {
+          title: "Brands",
+          url: "/dashboard/brands",
+          icon: BadgeCheck,
         },
         {
           title: "Products",

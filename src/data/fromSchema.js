@@ -42,6 +42,26 @@ const tagFormSchema = z.object({
   status: z.string(),
 });
 
+// schema for brand
+const brandFormSchema = z.object({
+  img_alt: z.string(),
+  brand_name: z.string().min(1, "Brand name is required."),
+  slug_name: z
+    .string()
+    .min(1, "Slug name is required.")
+    .regex(
+      /^[a-z-]+$/,
+      "Slug name can only contain lowercase letters and hyphens."
+    ),
+  brand_description: z.string(),
+  priority_number: z
+    .string()
+    .regex(/^\d+$/, "Priority number must be a valid number.")
+    .min(0, "Priority number must be at least 0."),
+  featured_brand: z.string(),
+  status: z.string(),
+});
+
 // Schema for attribute form
 const attributeFormSchema = z.object({
   attribute_name: z.string().min(1, "Attribute name is required."),
@@ -56,4 +76,9 @@ const attributeFormSchema = z.object({
   status: z.string(),
 });
 
-export { attributeFormSchema, categorieFormSchema, tagFormSchema };
+export {
+  attributeFormSchema,
+  brandFormSchema,
+  categorieFormSchema,
+  tagFormSchema,
+};

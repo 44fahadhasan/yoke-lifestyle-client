@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }) {
         {/* header */}
         <Header />
 
-        <main className="bg-muted min-h-[calc(100vh-125px)] xs:p-7">
+        <main className="container mx-auto bg-muted min-h-[calc(100vh-125px)] xs:p-7">
           {children}
         </main>
 
