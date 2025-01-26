@@ -31,13 +31,12 @@ const TextEditor = ({ content, setContent }) => {
         "eraser", // Basic formatting
         "ul",
         "ol",
-        "font",
+        // "font",
         "fontsize",
         "paragraph", // List and font options
         "lineHeight",
         "superscript",
         "subscript", // Line height and text modifications
-        "classSpan",
         "file",
         "image",
         "video",

@@ -328,7 +328,7 @@ const AttributeFrom = ({
                           <Button
                             onClick={() => handleDeleteInput(_id)}
                             variant="destructive"
-                            disabled={inputs.length === 1}
+                            className={`${inputs.length === 1 ? "hidden" : ""}`}
                           >
                             <Trash2 />
                           </Button>

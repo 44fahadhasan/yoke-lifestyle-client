@@ -35,11 +35,14 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { featureds } from "@/data/data";
+import { discounts, featureds, tabs } from "@/data/data";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, CircleX, Plus } from "lucide-react";
 import Image from "next/image";
 import { v4 as uuidv4 } from "uuid";
 import TextEditor from "../../HelperComponent/TextEditor/TextEditor";
+import ProductVariant from "./ProductVariant";
 
 const ProductFrom = ({
   form,
@@ -50,14 +53,26 @@ const ProductFrom = ({
   setMetaData,
   sectionImage,
   setSectionImage,
-  categoriesList,
   productDescription,
   setProductDescription,
   additionalInformation,
   setAdditionalInformation,
   shippingWarranty,
   setShippingWarranty,
+  variants,
+  setVariants,
 }) => {
+  const axiosSecure = useAxiosSecure();
+
+  // fetch categories list
+  const { data: categoriesList = [] } = useQuery({
+    queryKey: ["categories-list"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/api/categories/list");
+      return data?.data;
+    },
+  });
+
   // add a new section
   const handleAddNewSectionImage = () => {
     setSectionImage((prevSectionImage) => [
@@ -132,7 +147,7 @@ const ProductFrom = ({
                   name="product_category"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Product category</FormLabel>
+                      <FormLabel>Product Category</FormLabel>
                       <Popover>
                         {/* trigger */}
                         <PopoverTrigger asChild>
@@ -187,6 +202,144 @@ const ProductFrom = ({
                                       />
                                     </CommandItem>
                                   ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {/* product tag */}
+              {isLoading ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="product_category"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Product Tag</FormLabel>
+                      <Popover>
+                        {/* trigger */}
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
+                            >
+                              {/* selected value */}
+                              {field.value
+                                ? categoriesList?.find(
+                                    ({ _id }) => _id === field.value
+                                  )?.label || field.value
+                                : "Select an category"}
+
+                              {/* icon */}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="p-0">
+                          <Command>
+                            {/* search input */}
+                            <CommandInput
+                              placeholder="Search category..."
+                              className="h-9"
+                            />
+                            {/* lists */}
+                            <CommandList>
+                              <CommandEmpty>No category found.</CommandEmpty>
+
+                              <CommandGroup>
+                                {categoriesList
+                                  .slice(1)
+                                  .map(({ label, _id }) => (
+                                    <CommandItem
+                                      key={_id}
+                                      value={label}
+                                      onSelect={() => {
+                                        form.setValue("product_category", _id);
+                                      }}
+                                    >
+                                      {label}
+                                      <Check
+                                        className={`ml-auto ${
+                                          _id === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        }`}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {/* feature product */}
+              {isLoading ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="featured_product"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Product Brnad</FormLabel>
+                      <Popover>
+                        {/* trigger */}
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
+                            >
+                              {/* selected value */}
+                              {field.value}
+
+                              {/* icon */}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="p-0">
+                          <Command>
+                            {/* lists */}
+                            <CommandList>
+                              <CommandGroup>
+                                {featureds.map(({ value, label }) => (
+                                  <CommandItem
+                                    key={value}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue("featured_product", value);
+                                    }}
+                                    className="capitalize"
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`
+                                          ml-auto ${
+                                            value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          }
+                                        `}
+                                    />
+                                  </CommandItem>
+                                ))}
                               </CommandGroup>
                             </CommandList>
                           </Command>
@@ -368,6 +521,93 @@ const ProductFrom = ({
                   />
                 )}
               </div>
+
+              {/* discount type */}
+              {isLoading ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="discount_type"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Discount Type</FormLabel>
+                      <Popover>
+                        {/* trigger */}
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
+                            >
+                              {/* selected value */}
+                              {field.value}
+
+                              {/* icon */}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent className="p-0">
+                          <Command>
+                            {/* lists */}
+                            <CommandList>
+                              <CommandGroup>
+                                {discounts.map(({ value, label }) => (
+                                  <CommandItem
+                                    key={value}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue("discount_type", value);
+                                    }}
+                                    className="capitalize"
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`
+                                          ml-auto ${
+                                            value === field.value
+                                              ? "opacity-100"
+                                              : "opacity-0"
+                                          }
+                                        `}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
+              )}
+
+              {/* discount percentage */}
+              {isLoading ? (
+                <Skeleton className="h-10 w-full rounded-md" />
+              ) : (
+                <FormField
+                  control={form.control}
+                  name="discount_percentage"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1 xs:-mt-[5px]">
+                      <FormLabel>Discount Percentage</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="bg-primary-foreground"
+                          placeholder="Write discount percentage"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
           </div>
         </CardContent>
@@ -376,30 +616,29 @@ const ProductFrom = ({
           <div className="bg-muted p-4">
             <Tabs defaultValue="product_variant">
               {/* tab lists */}
-              <TabsList className="flex">
-                <TabsTrigger className="text-base" value="product_variant">
-                  Product Variant
-                </TabsTrigger>
-
-                <TabsTrigger className="text-base" value="product_description">
-                  Product Description
-                </TabsTrigger>
-
-                <TabsTrigger
-                  className="text-base"
-                  value="additional_information"
-                >
-                  Additional Information
-                </TabsTrigger>
-
-                <TabsTrigger className="text-base" value="shipping_warranty">
-                  Shipping & Warranty
-                </TabsTrigger>
+              <TabsList className="flex gap-4 mb-5">
+                {tabs.map((tab) => (
+                  <div key={tab.value} className="w-40">
+                    {isLoading ? (
+                      <Skeleton className="h-10 w-full rounded-md" />
+                    ) : (
+                      <TabsTrigger className="text-base" value={tab.value}>
+                        {tab.label}
+                      </TabsTrigger>
+                    )}
+                  </div>
+                ))}
               </TabsList>
 
               {/* product variant */}
               <TabsContent value="product_variant">
-                <Card className="shadow-none border-none">product variant</Card>
+                <Card className="bg-muted shadow-none border-none">
+                  <ProductVariant
+                    isLoading={isLoading}
+                    variants={variants}
+                    setVariants={setVariants}
+                  />
+                </Card>
               </TabsContent>
 
               {/* product description */}

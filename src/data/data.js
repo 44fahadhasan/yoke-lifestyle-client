@@ -135,12 +135,32 @@ const availabilityScope = [
   { value: "category", label: "category" },
 ];
 
+const tabs = [
+  { value: "product_variant", label: "Product Variant" },
+  { value: "product_description", label: "Product Description" },
+  { value: "additional_information", label: "Additional Information" },
+  { value: "shipping_warranty", label: "Shipping & Warranty" },
+];
+
+const discounts = [
+  { value: "Percentage", label: "Percentage" },
+  { value: "Direct", label: "Direct" },
+];
+
+const stocks = [
+  { value: "In Stock", label: "In Stock" },
+  { value: "Stock Out", label: "Stock Out" },
+];
+
 export {
   availabilityScope,
+  discounts,
   featureds,
   metaTags,
   nameTags,
   propertyTags,
   sorts,
   statuss,
+  stocks,
+  tabs,
 };

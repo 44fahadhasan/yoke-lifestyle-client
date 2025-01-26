@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -19,6 +18,14 @@ const AddProductFrom = () => {
       image: "",
     },
   ]);
+  const [variants, setVariants] = useState([
+    {
+      _id: uuidv4(),
+      price: "",
+      qty: "",
+      image: "",
+    },
+  ]);
   const [metaData, setMetaData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [productDescription, setProductDescription] = useState("");
@@ -28,15 +35,6 @@ const AddProductFrom = () => {
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
-
-  // fetch categories list
-  const { data: categoriesList = [], refetch } = useQuery({
-    queryKey: ["categories-list"],
-    queryFn: async () => {
-      const { data } = await axiosSecure.get("/api/categories/list");
-      return data?.data;
-    },
-  });
 
   // handle default values of form
   const form = useForm({
@@ -106,7 +104,6 @@ const AddProductFrom = () => {
       setMetaData={setMetaData}
       sectionImage={sectionImage}
       setSectionImage={setSectionImage}
-      categoriesList={categoriesList}
       isLoading={!true}
       productDescription={productDescription}
       setProductDescription={setProductDescription}
@@ -114,6 +111,8 @@ const AddProductFrom = () => {
       setAdditionalInformation={setAdditionalInformation}
       shippingWarranty={shippingWarranty}
       setShippingWarranty={setShippingWarranty}
+      variants={variants}
+      setVariants={setVariants}
     />
   );
 };
