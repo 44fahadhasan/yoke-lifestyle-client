@@ -23,7 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { stocks } from "@/data/data";
+import { customStyles, stocks } from "@/data/data";
 import { categorieFormSchema } from "@/data/fromSchema";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,11 +37,18 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 import { v4 as uuidv4 } from "uuid";
 import ImagePicker from "../../HelperComponent/ImageManager/ImagePicker";
 
+const animatedComponents = makeAnimated();
+
 const ProductVariant = ({ isLoading, variants, setVariants }) => {
+  const [attributeValues, setAttributeValues] = useState([]);
+
   // handle default values of form
   const form = useForm({
     resolver: zodResolver(categorieFormSchema),
@@ -60,11 +67,11 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
 
   const axiosSecure = useAxiosSecure();
 
-  // fetch categories list
-  const { data: categoriesList = [] } = useQuery({
-    queryKey: ["categories-list"],
+  // fetch attributes list
+  const { data: attributesList = [] } = useQuery({
+    queryKey: ["attributes-list"],
     queryFn: async () => {
-      const { data } = await axiosSecure.get("/api/categories/list");
+      const { data } = await axiosSecure.get("/api/product-attributes/list");
       return data?.data;
     },
   });
@@ -394,14 +401,14 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
 
             {/* bottom area (input fields) */}
             <div className="grid grid-cols-12 items-end gap-4 my-7">
-              {/* category specific attribute */}
+              {/* attribute name */}
               <div className="col-span-3">
                 {isLoading ? (
                   <Skeleton className="h-10 w-full rounded-md" />
                 ) : (
                   <FormField
                     control={form.control}
-                    name="category_specific_attribute"
+                    name="attribute_name"
                     render={({ field }) => {
                       return (
                         <FormItem className="flex flex-col">
@@ -417,10 +424,8 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                                 >
                                   {/* selected value */}
                                   {field.value
-                                    ? categoriesList?.find(
-                                        ({ _id }) => _id === field.value
-                                      )?.label || field.value
-                                    : "Select an category"}
+                                    ? field.value
+                                    : "Select an attribute"}
 
                                   {/* icon */}
                                   <ChevronsUpDown className="opacity-50" />
@@ -428,32 +433,34 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                               </FormControl>
                             </PopoverTrigger>
 
-                            <PopoverContent className="p-0">
+                            <PopoverContent className="w-full p-0">
                               <Command>
                                 {/* search input */}
                                 <CommandInput
-                                  placeholder="Search category..."
+                                  placeholder="Search attribute..."
                                   className="h-9"
                                 />
+
                                 {/* lists */}
                                 <CommandList>
                                   <CommandEmpty>
-                                    No category found.
+                                    No attribute found.
                                   </CommandEmpty>
 
                                   <CommandGroup>
-                                    {categoriesList
-                                      .slice(1)
-                                      .map(({ label, _id }) => (
+                                    {attributesList.map(
+                                      ({ label, _id, attribute_values }) => (
                                         <CommandItem
                                           key={_id}
                                           value={label}
                                           onSelect={() => {
                                             form.setValue(
-                                              "category_specific_attribute",
-                                              _id
+                                              "attribute_name",
+                                              label
                                             );
-                                            setCategorieName(label);
+                                            setAttributeValues(
+                                              attribute_values
+                                            );
                                           }}
                                         >
                                           {label}
@@ -465,7 +472,8 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                                             }`}
                                           />
                                         </CommandItem>
-                                      ))}
+                                      )
+                                    )}
                                   </CommandGroup>
                                 </CommandList>
                               </Command>
@@ -478,87 +486,22 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                 )}
               </div>
 
-              {/* category specific attribute */}
+              {/* attribute values */}
               <div className="col-span-7 grow">
                 {isLoading ? (
                   <Skeleton className="h-10 w-full rounded-md" />
                 ) : (
-                  <FormField
-                    control={form.control}
-                    name="category_specific_attribute"
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Attribute Values</FormLabel>
-                          <Popover>
-                            {/* trigger */}
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  role="combobox"
-                                  className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
-                                >
-                                  {/* selected value */}
-                                  {field.value
-                                    ? categoriesList?.find(
-                                        ({ _id }) => _id === field.value
-                                      )?.label || field.value
-                                    : "Select an category"}
-
-                                  {/* icon */}
-                                  <ChevronsUpDown className="opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-
-                            <PopoverContent className="p-0">
-                              <Command>
-                                {/* search input */}
-                                <CommandInput
-                                  placeholder="Search category..."
-                                  className="h-9"
-                                />
-                                {/* lists */}
-                                <CommandList>
-                                  <CommandEmpty>
-                                    No category found.
-                                  </CommandEmpty>
-
-                                  <CommandGroup>
-                                    {categoriesList
-                                      .slice(1)
-                                      .map(({ label, _id }) => (
-                                        <CommandItem
-                                          key={_id}
-                                          value={label}
-                                          onSelect={() => {
-                                            form.setValue(
-                                              "category_specific_attribute",
-                                              _id
-                                            );
-                                            setCategorieName(label);
-                                          }}
-                                        >
-                                          {label}
-                                          <Check
-                                            className={`ml-auto ${
-                                              _id === field.value
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                            }`}
-                                          />
-                                        </CommandItem>
-                                      ))}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        </FormItem>
-                      );
-                    }}
-                  />
+                  <FormItem>
+                    <FormLabel>Attribute Values</FormLabel>
+                    <Select
+                      isMulti
+                      closeMenuOnSelect={false}
+                      components={animatedComponents}
+                      options={attributeValues}
+                      defaultValue={null}
+                      styles={customStyles}
+                    />
+                  </FormItem>
                 )}
               </div>
 
@@ -573,66 +516,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
               >
                 <Trash2 />
               </Button>
-
-              {/* add attribute button */}
             </div>
-
-            {/* bottom area (input fields) */}
-            {/* <div className="grid grid-cols-12 items-end gap-4 my-7">
-              <div className="col-span-3">
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full rounded-md" />
-                ) : (
-                  <FormItem>
-                    <FormLabel>Attribute Name</FormLabel>
-                    <Input
-                      type="text"
-                      value={variant.sku}
-                      onChange={(e) =>
-                        handleSpecificationChanges(
-                          variant._id,
-                          "sku",
-                          e.target.value
-                        )
-                      }
-                      className="bg-primary-foreground"
-                      placeholder="Write product sku"
-                    />
-                  </FormItem>
-                )}
-              </div>
-
-              <div className="col-span-3">
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full rounded-md" />
-                ) : (
-                  <FormItem>
-                    <FormLabel>Attribute Value</FormLabel>
-                    <Input
-                      type="text"
-                      value={variant.sku}
-                      onChange={(e) =>
-                        handleSpecificationChanges(
-                          variant._id,
-                          "sku",
-                          e.target.value
-                        )
-                      }
-                      className="bg-primary-foreground"
-                      placeholder="Write product sku"
-                    />
-                  </FormItem>
-                )}
-              </div>
-
-              <Button variant="outline" className="col-span-3">
-                <CopyPlus />
-              </Button>
-
-              <Button variant="destructive" className="col-span-3">
-                <Trash2 />
-              </Button>
-            </div> */}
           </div>
         ))}
 

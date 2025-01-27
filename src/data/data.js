@@ -152,8 +152,85 @@ const stocks = [
   { value: "Stock Out", label: "Stock Out" },
 ];
 
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    border: "none",
+    borderRadius: "0.375rem",
+    backgroundColor: "hsl(var(--primary-foreground))",
+    color: "hsl(var(--foreground))",
+    boxShadow: "0 0 0 1px hsl(var(--border))",
+    padding: "0px",
+    minHeight: "0px",
+  }),
+
+  menu: (provided) => ({
+    ...provided,
+    backgroundColor: "hsl(var(--popover))",
+    borderRadius: "0.375rem",
+    boxShadow: "hsl(var(--shadow)) 0px 4px 16px",
+    color: "hsl(var(--popover-foreground))",
+    marginTop: "0.5rem",
+    zIndex: 9999,
+  }),
+
+  option: (provided, { isFocused, isSelected }) => ({
+    ...provided,
+    fontSize: "14px",
+    padding: "0.375rem 0.5rem",
+    backgroundColor: isFocused
+      ? "hsl(var(--accent))"
+      : isSelected
+      ? "hsl(var(--accent))"
+      : "hsl(var(--popover))",
+    color: isFocused
+      ? "hsl(var(--accent-foreground))"
+      : isSelected
+      ? "hsl(var(--accent-foreground))"
+      : "hsl(var(--foreground))",
+    borderRadius: "0.25rem",
+    cursor: "pointer",
+    transition: "background-color 0.2s, color 0.2s",
+  }),
+
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: "hsl(var(--accent))",
+    color: "hsl(var(--accent-foreground))",
+    padding: "0 0.5rem",
+    borderRadius: "0.25rem",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.25rem",
+  }),
+
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: "hsl(var(--accent-foreground))",
+    fontSize: "0.875rem",
+  }),
+
+  multiValueRemove: (provided) => ({
+    ...provided,
+    backgroundColor: "hsl(var(--destructive))",
+    color: "hsl(var(--destructive-foreground))",
+    cursor: "pointer",
+    transition: "color 0.2s",
+    ":hover": {
+      backgroundColor: "#761E1E",
+    },
+  }),
+
+  placeholder: (provided) => ({
+    ...provided,
+    color: "hsl(var(--accent-foreground))",
+    fontSize: "0.875rem",
+  }),
+};
+
 export {
   availabilityScope,
+  customStyles,
   discounts,
   featureds,
   metaTags,
