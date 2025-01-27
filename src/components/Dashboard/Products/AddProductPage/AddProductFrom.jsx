@@ -1,6 +1,6 @@
 "use client";
 import { ToastAction } from "@/components/ui/toast";
-import { categorieFormSchema } from "@/data/fromSchema";
+import { productFormSchema } from "@/data/fromSchema";
 import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
@@ -38,16 +38,16 @@ const AddProductFrom = () => {
 
   // handle default values of form
   const form = useForm({
-    resolver: zodResolver(categorieFormSchema),
+    resolver: zodResolver(productFormSchema),
     defaultValues: {
-      img_alt: "",
-      img_caption: "",
-      categorie_name: "",
-      slug_name: "",
-      categorie_description: "",
-      priority_number: "0",
-      parent_categorie: null,
-      featured_categorie: "no",
+      product_name: "",
+      product_category: "",
+      product_tag: "",
+      product_brand: "",
+      featured_product: "no",
+      product_video_link: "",
+      discount_type: "percentage",
+      discount_percentage: "",
       status: "published",
     },
   });
@@ -57,21 +57,20 @@ const AddProductFrom = () => {
     // payload data
     const payload = {
       ...data,
-      priority_number: Number(data.priority_number),
-      image_url: addedImageValue,
+      discount_percentage: Number(data.discount_percentage),
+      product_images_url: sectionImage.map(({ image }) => ({ image })),
       meta_info: metaData,
       email: auth.email,
     };
 
+    console.log({ payload });
+
     try {
       setLoading(true);
 
-      const { data } = await axiosSecure.post("/api/categories", payload);
+      const { data } = await axiosSecure.post("/api/products", payload);
 
       if (data.success) {
-        refetch();
-
-        setAddedImageValue("");
         form.reset();
 
         popupToast({
@@ -81,15 +80,6 @@ const AddProductFrom = () => {
         });
       }
     } catch ({ response }) {
-      const { keyPattern, keyValue } =
-        response?.data?.error?.errorResponse || {};
-
-      if (keyPattern?.categorie_name && keyValue?.categorie_name) {
-        return toast.error(
-          `The ${keyValue?.categorie_name} category is already exists. Please choose another name.`
-        );
-      }
-
       toast.error(response?.data?.message);
     } finally {
       setLoading(false);

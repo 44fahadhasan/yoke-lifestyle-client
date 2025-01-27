@@ -2,6 +2,7 @@
 import ImagePicker from "@/components/Dashboard/HelperComponent/ImageManager/ImagePicker";
 import SEO from "@/components/Dashboard/HelperComponent/SEOManager/SEO";
 import LoadingButton from "@/components/reusable/LoadingButton";
+import TypographySmall from "@/components/reusable/Typography/TypographySmall";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -40,6 +41,7 @@ import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown, CircleX, Plus } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TextEditor from "../../HelperComponent/TextEditor/TextEditor";
 import ProductVariant from "./ProductVariant";
@@ -69,6 +71,24 @@ const ProductFrom = ({
     queryKey: ["categories-list"],
     queryFn: async () => {
       const { data } = await axiosSecure.get("/api/categories/list");
+      return data?.data;
+    },
+  });
+
+  // fetch tags list
+  const { data: tagsList = [] } = useQuery({
+    queryKey: ["tags-list"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/api/tags/list");
+      return data?.data;
+    },
+  });
+
+  // fetch brands list
+  const { data: brandsList = [] } = useQuery({
+    queryKey: ["brands-list"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/api/brands/list");
       return data?.data;
     },
   });
@@ -106,10 +126,18 @@ const ProductFrom = ({
     );
   };
 
+  // set value empty string to discount percentage when discount type  selected direct
+  useEffect(() => {
+    const discountType = form.getValues("discount_type");
+    if (discountType.toLowerCase() === "direct") {
+      form.setValue("discount_percentage", "");
+    }
+  }, [form.watch("discount_type")]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* basic info */}
+        {/* product basic fields */}
         <CardContent className="pt-6">
           <div className="grid bg-muted p-4">
             <div className="col-span-1 xs:col-span-2 grid gap-4 xs:grid-cols-2 grid-cols-1">
@@ -158,11 +186,7 @@ const ProductFrom = ({
                               className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                             >
                               {/* selected value */}
-                              {field.value
-                                ? categoriesList?.find(
-                                    ({ _id }) => _id === field.value
-                                  )?.label || field.value
-                                : "Select an category"}
+                              {field.value ? field.value : "Select an category"}
 
                               {/* icon */}
                               <ChevronsUpDown className="opacity-50" />
@@ -189,7 +213,13 @@ const ProductFrom = ({
                                       key={_id}
                                       value={label}
                                       onSelect={() => {
-                                        form.setValue("product_category", _id);
+                                        form.setValue(
+                                          "product_category",
+                                          label,
+                                          {
+                                            shouldValidate: true,
+                                          }
+                                        );
                                       }}
                                     >
                                       {label}
@@ -207,6 +237,7 @@ const ProductFrom = ({
                           </Command>
                         </PopoverContent>
                       </Popover>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -218,7 +249,7 @@ const ProductFrom = ({
               ) : (
                 <FormField
                   control={form.control}
-                  name="product_category"
+                  name="product_tag"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel>Product Tag</FormLabel>
@@ -232,11 +263,7 @@ const ProductFrom = ({
                               className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                             >
                               {/* selected value */}
-                              {field.value
-                                ? categoriesList?.find(
-                                    ({ _id }) => _id === field.value
-                                  )?.label || field.value
-                                : "Select an category"}
+                              {field.value ? field.value : "Select an tag"}
 
                               {/* icon */}
                               <ChevronsUpDown className="opacity-50" />
@@ -248,34 +275,32 @@ const ProductFrom = ({
                           <Command>
                             {/* search input */}
                             <CommandInput
-                              placeholder="Search category..."
+                              placeholder="Search tag..."
                               className="h-9"
                             />
                             {/* lists */}
                             <CommandList>
-                              <CommandEmpty>No category found.</CommandEmpty>
+                              <CommandEmpty>No tag found.</CommandEmpty>
 
                               <CommandGroup>
-                                {categoriesList
-                                  .slice(1)
-                                  .map(({ label, _id }) => (
-                                    <CommandItem
-                                      key={_id}
-                                      value={label}
-                                      onSelect={() => {
-                                        form.setValue("product_category", _id);
-                                      }}
-                                    >
-                                      {label}
-                                      <Check
-                                        className={`ml-auto ${
-                                          _id === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        }`}
-                                      />
-                                    </CommandItem>
-                                  ))}
+                                {tagsList.map(({ label, _id }) => (
+                                  <CommandItem
+                                    key={_id}
+                                    value={label}
+                                    onSelect={() => {
+                                      form.setValue("product_tag", label);
+                                    }}
+                                  >
+                                    {label}
+                                    <Check
+                                      className={`ml-auto ${
+                                        _id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      }`}
+                                    />
+                                  </CommandItem>
+                                ))}
                               </CommandGroup>
                             </CommandList>
                           </Command>
@@ -286,16 +311,16 @@ const ProductFrom = ({
                 />
               )}
 
-              {/* feature product */}
+              {/* product brand */}
               {isLoading ? (
                 <Skeleton className="h-10 w-full rounded-md" />
               ) : (
                 <FormField
                   control={form.control}
-                  name="featured_product"
+                  name="product_brand"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Product Brnad</FormLabel>
+                      <FormLabel>Product Brand</FormLabel>
                       <Popover>
                         {/* trigger */}
                         <PopoverTrigger asChild>
@@ -303,10 +328,10 @@ const ProductFrom = ({
                             <Button
                               variant="outline"
                               role="combobox"
-                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
+                              className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
                             >
                               {/* selected value */}
-                              {field.value}
+                              {field.value ? field.value : "Select an brand"}
 
                               {/* icon */}
                               <ChevronsUpDown className="opacity-50" />
@@ -316,27 +341,31 @@ const ProductFrom = ({
 
                         <PopoverContent className="p-0">
                           <Command>
+                            {/* search input */}
+                            <CommandInput
+                              placeholder="Search brand..."
+                              className="h-9"
+                            />
                             {/* lists */}
                             <CommandList>
+                              <CommandEmpty>No brand found.</CommandEmpty>
+
                               <CommandGroup>
-                                {featureds.map(({ value, label }) => (
+                                {brandsList.map(({ label, _id }) => (
                                   <CommandItem
-                                    key={value}
+                                    key={_id}
                                     value={label}
                                     onSelect={() => {
-                                      form.setValue("featured_product", value);
+                                      form.setValue("product_brand", label);
                                     }}
-                                    className="capitalize"
                                   >
                                     {label}
                                     <Check
-                                      className={`
-                                          ml-auto ${
-                                            value === field.value
-                                              ? "opacity-100"
-                                              : "opacity-0"
-                                          }
-                                        `}
+                                      className={`ml-auto ${
+                                        _id === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      }`}
                                     />
                                   </CommandItem>
                                 ))}
@@ -416,7 +445,7 @@ const ProductFrom = ({
 
               {/* product images */}
               <div className="col-span-1 xs:col-span-2 space-y-2">
-                {isLoading || <FormLabel>Product Images</FormLabel>}
+                {isLoading || <TypographySmall>Product Images</TypographySmall>}
 
                 <div className="grid grid-cols-4 gap-4">
                   {isLoading ? (
@@ -593,25 +622,33 @@ const ProductFrom = ({
                 <FormField
                   control={form.control}
                   name="discount_percentage"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1 xs:-mt-[5px]">
-                      <FormLabel>Discount Percentage</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="bg-primary-foreground"
-                          placeholder="Write discount percentage"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    const isDisabled =
+                      form.getValues("discount_type").toLowerCase() ===
+                      "direct";
+
+                    return (
+                      <FormItem className="space-y-1 xs:-mt-[5px]">
+                        <FormLabel>Discount Percentage</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            disabled={isDisabled}
+                            className="bg-primary-foreground"
+                            placeholder="Write discount percentage"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               )}
             </div>
           </div>
         </CardContent>
 
+        {/* product variants & others fields */}
         <CardContent>
           <div className="bg-muted p-4">
             <Tabs defaultValue="product_variant">

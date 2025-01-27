@@ -42,6 +42,20 @@ const tagFormSchema = z.object({
   status: z.string(),
 });
 
+// Schema for attribute form
+const attributeFormSchema = z.object({
+  attribute_name: z.string().min(1, "Attribute name is required."),
+  priority_number: z
+    .string()
+    .regex(/^\d+$/, "Priority number must be a valid number.")
+    .min(0, "Priority number must be at least 0."),
+  availability_scope: z.string(),
+  category_specific_attribute: z
+    .union([z.string(), z.literal(null)])
+    .default(null),
+  status: z.string(),
+});
+
 // schema for brand
 const brandFormSchema = z.object({
   img_alt: z.string(),
@@ -62,17 +76,27 @@ const brandFormSchema = z.object({
   status: z.string(),
 });
 
-// Schema for attribute form
-const attributeFormSchema = z.object({
-  attribute_name: z.string().min(1, "Attribute name is required."),
-  priority_number: z
+// schema for product
+const productFormSchema = z.object({
+  product_name: z.string().min(1, "Product name is required."),
+  product_category: z.string().min(1, "Product category is required."),
+  product_tag: z.union([z.string(), z.literal("")]).default(""),
+  product_brand: z.union([z.string(), z.literal("")]).default(""),
+  featured_product: z.string(),
+  product_video_link: z.union([z.string(), z.literal("")]).default(""),
+  discount_type: z.string(),
+  discount_percentage: z
     .string()
-    .regex(/^\d+$/, "Priority number must be a valid number.")
-    .min(0, "Priority number must be at least 0."),
-  availability_scope: z.string(),
-  category_specific_attribute: z
-    .union([z.string(), z.literal(null)])
-    .default(null),
+    .refine((value) => value === "" || /^\d+$/.test(value), {
+      message: "Percentage must be a valid number.",
+    })
+    .refine((value) => value === "" || parseInt(value, 10) >= 1, {
+      message: "Percentage must be at least 1.",
+    })
+    .refine((value) => value === "" || parseInt(value, 10) <= 100, {
+      message: "Percentage cannot exceed 100.",
+    })
+    .optional(),
   status: z.string(),
 });
 
@@ -80,5 +104,6 @@ export {
   attributeFormSchema,
   brandFormSchema,
   categorieFormSchema,
+  productFormSchema,
   tagFormSchema,
 };

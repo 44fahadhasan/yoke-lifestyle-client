@@ -143,8 +143,8 @@ const tabs = [
 ];
 
 const discounts = [
-  { value: "Percentage", label: "Percentage" },
-  { value: "Direct", label: "Direct" },
+  { value: "percentage", label: "percentage" },
+  { value: "direct", label: "direct" },
 ];
 
 const stocks = [
