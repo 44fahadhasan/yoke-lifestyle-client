@@ -53,9 +53,6 @@ const animatedComponents = makeAnimated();
 
 const ProductVariant = ({ isLoading, variants, setVariants }) => {
   const [attributeValues, setAttributeValues] = useState([]);
-  const [selectedOptions, setSelectedOptions] = useState(null);
-
-  // console.log({ selectedOptions });
 
   // handle default values of form
   const form = useForm({
@@ -518,12 +515,12 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                             <FormLabel>Attribute Values</FormLabel>
                             <Select
                               isMulti
+                              menuPosition="fixed"
                               closeMenuOnSelect={false}
                               components={animatedComponents}
                               options={attributeValues}
                               styles={customStyles}
-                              defaultValue={null}
-                              value={selectedOptions}
+                              defaultValue={null} 
                               onChange={(value) => {
                                 handleSpecificationChanges(
                                   variant.id,
@@ -531,10 +528,6 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                                   value,
                                   subsection.id
                                 );
-
-                                // setSelectedOptions(value);
-
-                                console.log("object");
                               }}
                             />
                           </FormItem>
@@ -559,6 +552,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                           </Button>
                         )}
                       </div>
+
                       {/* attribute section remove button */}
                       <div className="col-span-1">
                         {isLoading ? (

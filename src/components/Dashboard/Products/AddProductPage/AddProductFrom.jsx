@@ -35,7 +35,7 @@ const AddProductFrom = () => {
   const [additionalInformation, setAdditionalInformation] = useState("");
   const [shippingWarranty, setShippingWarranty] = useState("");
 
-  // console.log({ variants });
+  console.log({ variants });
 
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
