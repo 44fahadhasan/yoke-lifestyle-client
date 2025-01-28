@@ -426,87 +426,77 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                         {isLoading ? (
                           <Skeleton className="h-10 w-full rounded-md" />
                         ) : (
-                          <FormField
-                            control={form.control}
-                            name="attribute_name"
-                            render={({ field }) => {
-                              return (
-                                <FormItem className="flex flex-col">
-                                  <FormLabel>Attribute Name</FormLabel>
-                                  <Popover>
-                                    {/* trigger */}
-                                    <PopoverTrigger asChild>
-                                      <FormControl>
-                                        <Button
-                                          variant="outline"
-                                          role="combobox"
-                                          className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
-                                        >
-                                          {/* selected value */}
-                                          {field.value
-                                            ? field.value
-                                            : "Select an attribute"}
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Attribute Name</FormLabel>
 
-                                          {/* icon */}
-                                          <ChevronsUpDown className="opacity-50" />
-                                        </Button>
-                                      </FormControl>
-                                    </PopoverTrigger>
+                            <Popover>
+                              {/* trigger */}
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  role="combobox"
+                                  className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
+                                >
+                                  {/* selected value */}
+                                  {subsection?.attribute_name ||
+                                    "Select an attribute"}
 
-                                    <PopoverContent className="w-full p-0">
-                                      <Command>
-                                        {/* search input */}
-                                        <CommandInput
-                                          placeholder="Search attribute..."
-                                          className="h-9"
-                                        />
+                                  {/* icon */}
+                                  <ChevronsUpDown className="opacity-50" />
+                                </Button>
+                              </PopoverTrigger>
 
-                                        {/* lists */}
-                                        <CommandList>
-                                          <CommandEmpty>
-                                            No attribute found.
-                                          </CommandEmpty>
+                              <PopoverContent className="w-full p-0">
+                                <Command>
+                                  {/* search input */}
+                                  <CommandInput
+                                    placeholder="Search attribute..."
+                                    className="h-9"
+                                  />
 
-                                          <CommandGroup>
-                                            {attributesList.map(
-                                              ({
+                                  <CommandList>
+                                    <CommandEmpty>
+                                      No attribute found.
+                                    </CommandEmpty>
+
+                                    {/* lists */}
+                                    <CommandGroup>
+                                      {attributesList.map(
+                                        ({ label, _id, attribute_values }) => (
+                                          <CommandItem
+                                            key={_id}
+                                            value={label}
+                                            onSelect={() => {
+                                              handleSpecificationChanges(
+                                                variant.id,
+                                                "attribute_name",
                                                 label,
-                                                _id,
-                                                attribute_values,
-                                              }) => (
-                                                <CommandItem
-                                                  key={_id}
-                                                  value={label}
-                                                  onSelect={() => {
-                                                    form.setValue(
-                                                      "attribute_name",
-                                                      label
-                                                    );
-                                                    setAttributeValues(
-                                                      attribute_values
-                                                    );
-                                                  }}
-                                                >
-                                                  {label}
-                                                  <Check
-                                                    className={`ml-auto ${
-                                                      _id === field.value
-                                                        ? "opacity-100"
-                                                        : "opacity-0"
-                                                    }`}
-                                                  />
-                                                </CommandItem>
-                                              )
-                                            )}
-                                          </CommandGroup>
-                                        </CommandList>
-                                      </Command>
-                                    </PopoverContent>
-                                  </Popover>
-                                </FormItem>
-                              );
-                            }}
-                          />
+                                                subsection.id
+                                              );
+
+                                              setAttributeValues(
+                                                attribute_values
+                                              );
+                                            }}
+                                          >
+                                            {label}
+                                            <Check
+                                              className={`ml-auto ${
+                                                subsection?.attribute_name ===
+                                                label
+                                                  ? "opacity-100"
+                                                  : "opacity-0"
+                                              }`}
+                                            />
+                                          </CommandItem>
+                                        )
+                                      )}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </FormItem>
                         )}
                       </div>
 
@@ -544,7 +534,6 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                           </Button>
                         )}
                       </div>
-
                       {/* attribute section remove button */}
                       <div className="col-span-1">
                         {isLoading ? (

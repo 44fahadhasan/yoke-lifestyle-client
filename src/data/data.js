@@ -166,6 +166,8 @@ const customStyles = {
 
   menu: (provided) => ({
     ...provided,
+    borderWidth: "1px",
+    borderColor: "hsl(var(--border))",
     backgroundColor: "hsl(var(--popover))",
     borderRadius: "0.375rem",
     boxShadow: "hsl(var(--shadow)) 0px 4px 16px",
