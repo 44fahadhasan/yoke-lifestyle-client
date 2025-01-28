@@ -53,6 +53,9 @@ const animatedComponents = makeAnimated();
 
 const ProductVariant = ({ isLoading, variants, setVariants }) => {
   const [attributeValues, setAttributeValues] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState(null);
+
+  // console.log({ selectedOptions });
 
   // handle default values of form
   const form = useForm({
@@ -178,8 +181,9 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
   return (
     <Form {...form}>
       <div className="grid gap-4">
-        {variants.map((variant) => (
+        {variants.map((variant, idx) => (
           <Accordion
+            key={`variant${idx}`}
             defaultValue="item-1"
             type="single"
             collapsible
@@ -189,19 +193,24 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
               {/* accordion trigger button */}
               <AccordionTrigger className="font-semibold hover:no-underline">
                 {/* variant number */}
-                <TypographyH4
-                  className={"text-base"}
-                >{`Variant ${variant.id}`}</TypographyH4>
+                {isLoading ? (
+                  <Skeleton className="h-7 w-36 rounded-md" />
+                ) : (
+                  <TypographyH4
+                    className={"text-base"}
+                  >{`Variant ${variant.id}`}</TypographyH4>
+                )}
 
                 {/* icon */}
-                <CircleChevronDown className="transition-transform duration-1000" />
+                {isLoading ? (
+                  <Skeleton className="size-7 rounded-full" />
+                ) : (
+                  <CircleChevronDown className="transition-transform duration-1000" />
+                )}
               </AccordionTrigger>
 
               <AccordionContent className="pt-4 pl-1 space-y-3">
-                <div
-                  key={variant.id}
-                  className="first:border-t-0 border-t border-primary"
-                >
+                <div className="first:border-t-0 border-t border-primary">
                   {/* top area */}
                   <div className="flex justify-end mb-4">
                     {/* remove variant button */}
@@ -416,9 +425,9 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                   </div>
 
                   {/* bottom area (sub section) */}
-                  {variant.subsections.map((subsection) => (
+                  {variant.subsections.map((subsection, idx) => (
                     <div
-                      key={subsection.id}
+                      key={`subsections${idx}`}
                       className="grid grid-cols-12 items-end gap-4 my-7"
                     >
                       {/* attribute name */}
@@ -512,16 +521,21 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                               closeMenuOnSelect={false}
                               components={animatedComponents}
                               options={attributeValues}
-                              defaultValue={null}
                               styles={customStyles}
-                              onChange={(value) =>
+                              defaultValue={null}
+                              value={selectedOptions}
+                              onChange={(value) => {
                                 handleSpecificationChanges(
                                   variant.id,
                                   "attribute_values",
                                   value,
                                   subsection.id
-                                )
-                              }
+                                );
+
+                                // setSelectedOptions(value);
+
+                                console.log("object");
+                              }}
                             />
                           </FormItem>
                         )}
