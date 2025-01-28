@@ -114,7 +114,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                 {
                   id: variant.subsections.length + 1,
                   attribute_name: "",
-                  attribute_values: "",
+                  attribute_values: [],
                 },
               ],
             }
@@ -514,6 +514,14 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                               options={attributeValues}
                               defaultValue={null}
                               styles={customStyles}
+                              onChange={(value) =>
+                                handleSpecificationChanges(
+                                  variant.id,
+                                  "attribute_values",
+                                  value,
+                                  subsection.id
+                                )
+                              }
                             />
                           </FormItem>
                         )}
@@ -528,7 +536,10 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                             type="button"
                             variant="outline"
                             className="w-full"
-                            onClick={() => handleAddSubsection(variant.id)}
+                            onClick={() => {
+                              handleAddSubsection(variant.id);
+                              setAttributeValues([]);
+                            }}
                           >
                             <CopyPlus />
                           </Button>

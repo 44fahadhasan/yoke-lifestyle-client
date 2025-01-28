@@ -26,7 +26,7 @@ const AddProductFrom = () => {
       product_quantity: "",
       product_price: "",
       stock_status: "",
-      subsections: [{ id: 1, attribute_name: "", attribute_values: "" }],
+      subsections: [{ id: 1, attribute_name: "", attribute_values: [] }],
     },
   ]);
   const [metaData, setMetaData] = useState([]);
@@ -34,6 +34,8 @@ const AddProductFrom = () => {
   const [productDescription, setProductDescription] = useState("");
   const [additionalInformation, setAdditionalInformation] = useState("");
   const [shippingWarranty, setShippingWarranty] = useState("");
+
+  console.log({ variants });
 
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
