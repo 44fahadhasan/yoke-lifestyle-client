@@ -1,5 +1,8 @@
-import JoditEditor from "jodit-react";
+"use client";
+import { Skeleton } from "@/components/ui/skeleton";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 const TextEditor = ({ content, setContent }) => {
   const [theme, setTheme] = useState(localStorage.getItem("theme"));
@@ -67,13 +70,19 @@ const TextEditor = ({ content, setContent }) => {
   );
 
   return (
-    <JoditEditor
-      value={content}
-      config={config}
-      tabIndex={1}
-      onBlur={(newContent) => setContent(newContent)}
-      onChange={(newContent) => setContent(newContent)}
-    />
+    <>
+      {JoditEditor ? (
+        <JoditEditor
+          value={content}
+          config={config}
+          tabIndex={1}
+          onBlur={(newContent) => setContent(newContent)}
+          onChange={(newContent) => setContent(newContent)}
+        />
+      ) : (
+        <Skeleton className="h-96 w-full rounded-none" />
+      )}
+    </>
   );
 };
 
