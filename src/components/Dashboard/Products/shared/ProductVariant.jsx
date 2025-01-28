@@ -41,7 +41,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { v4 as uuidv4 } from "uuid";
 import ImagePicker from "../../HelperComponent/ImageManager/ImagePicker";
 
 const animatedComponents = makeAnimated();
@@ -61,7 +60,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
       priority_number: "0",
       parent_categorie: null,
       featured_categorie: "no",
-      status: "published",
+      stock_status: "in stock",
     },
   });
 
@@ -76,40 +75,95 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
     },
   });
 
+  // add a new variant section
   const handleAddVariant = () => {
     setVariants([
       ...variants,
       {
-        _id: uuidv4(),
-        price: "",
-        qty: "",
-        image: "",
+        id: variants?.length + 1,
+        image_url: "",
+        sku: "",
+        product_quantity: "",
+        product_price: "",
+        stock_status: "",
+        subsections: [{ id: 1, key: "", value: "" }],
       },
     ]);
   };
 
+  // delete a variant
   const handleDeleteVariant = (variantId) => {
-    setVariants(variants.filter((variant) => variant._id !== variantId));
+    setVariants(variants.filter((variant) => variant.id !== variantId));
   };
 
-  const handleImageSelect = (selectedImage, variantId) => {
+  // add a new sub section section
+  const handleAddSubsection = (variantId) => {
     setVariants((prevVariants) =>
       prevVariants.map((variant) =>
-        variant._id === variantId
-          ? { ...variant, image: selectedImage }
+        variant.id === variantId
+          ? {
+              ...variant,
+              subsections: [
+                ...variant.subsections,
+                {
+                  id: variant.subsections.length + 1,
+                  attribute_name: "",
+                  attribute_values: "",
+                },
+              ],
+            }
           : variant
       )
     );
   };
 
-  const handleSpecificationChanges = (variantId, field, value) => {
+  // delete a sub section
+  const handleDeleteSubsection = (variantId, subsectionId) => {
     setVariants((prevVariants) =>
       prevVariants.map((variant) =>
-        variant._id === variantId
+        variant.id === variantId
           ? {
               ...variant,
-              [field]: value,
+              subsections: variant.subsections.filter(
+                (subsection) => subsection.id !== subsectionId
+              ),
             }
+          : variant
+      )
+    );
+  };
+
+  // image select of a specific variant
+  const handleImageSelect = (selectedImage, variantId) => {
+    setVariants((prevVariants) =>
+      prevVariants.map((variant) =>
+        variant.id === variantId
+          ? { ...variant, image_url: selectedImage }
+          : variant
+      )
+    );
+  };
+
+  // update a specific variant & sub section fileds
+  const handleSpecificationChanges = (
+    variantId,
+    field,
+    value,
+    subsectionId = null
+  ) => {
+    setVariants((prevVariants) =>
+      prevVariants.map((variant) =>
+        variant.id === variantId
+          ? subsectionId
+            ? {
+                ...variant,
+                subsections: variant.subsections.map((subsection) =>
+                  subsection.id === subsectionId
+                    ? { ...subsection, [field]: value }
+                    : subsection
+                ),
+              }
+            : { ...variant, [field]: value }
           : variant
       )
     );
@@ -118,38 +172,44 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
   return (
     <Form {...form}>
       <div className="grid gap-4">
-        {variants.map((variant, idx) => (
+        {variants.map((variant) => (
           <div
-            key={variant._id}
+            key={variant.id}
             className="first:border-t-0 border-t border-primary"
           >
             {/* top area */}
-            {isLoading || (
-              <div className="flex justify-between items-center mb-4 pt-5">
-                {/* variant number */}
-                <TypographyH4 className={"text-base"}>{`Variant ${
-                  idx + 1
-                }`}</TypographyH4>
+            <div className="flex justify-between items-center mb-4 pt-5">
+              {/* variant number */}
+              {isLoading ? (
+                <Skeleton className="h-6 w-36 rounded-md" />
+              ) : (
+                <TypographyH4
+                  className={"text-base"}
+                >{`Variant ${variant.id}`}</TypographyH4>
+              )}
 
-                {/* remove variant button */}
+              {/* remove variant button */}
+              {isLoading ? (
+                <Skeleton className="size-8 rounded-full" />
+              ) : (
                 <X
                   className={`cursor-pointer bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full ${
                     variants.length === 1 ? "hidden" : ""
                   }`}
-                  onClick={() => handleDeleteVariant(variant._id)}
+                  onClick={() => handleDeleteVariant(variant.id)}
                 />
-              </div>
-            )}
+              )}
+            </div>
 
             {/* middle area */}
             <div className="grid grid-cols-3 gap-4">
               {/* left area (img) */}
               <div className="col-span-1 relative p-2 h-full w-full border-2 border-dashed border-primary min-h-36 max-h-min-h-36">
-                {variant.image ? (
+                {variant.image_url ? (
                   <div className="relative h-full w-full">
                     {/* img preview */}
                     <Image
-                      src={variant.image}
+                      src={variant.image_url}
                       alt="image preview"
                       layout="fill"
                       objectFit="cover"
@@ -160,7 +220,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                     <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300">
                       <ImagePicker
                         setAddedImageValue={(selectedImage) =>
-                          handleImageSelect(selectedImage, variant._id)
+                          handleImageSelect(selectedImage, variant.id)
                         }
                       />
                     </div>
@@ -171,7 +231,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                   <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300 h-full">
                     <ImagePicker
                       setAddedImageValue={(selectedImage) =>
-                        handleImageSelect(selectedImage, variant._id)
+                        handleImageSelect(selectedImage, variant.id)
                       }
                     />
                   </div>
@@ -193,7 +253,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                           value={variant.sku}
                           onChange={(e) =>
                             handleSpecificationChanges(
-                              variant._id,
+                              variant.id,
                               "sku",
                               e.target.value
                             )
@@ -215,10 +275,10 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                         <Input
                           type="number"
                           min={0}
-                          value={variant.sku}
+                          value={variant.product_quantity}
                           onChange={(e) =>
                             handleSpecificationChanges(
-                              variant._id,
+                              variant.id,
                               "product_quantity",
                               e.target.value
                             )
@@ -242,10 +302,10 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                         <Input
                           type="number"
                           min={0}
-                          value={variant.sku}
+                          value={variant.product_price}
                           onChange={(e) =>
                             handleSpecificationChanges(
-                              variant._id,
+                              variant.id,
                               "product_price",
                               e.target.value
                             )
@@ -293,10 +353,17 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                                     <CommandGroup>
                                       {stocks.map(({ value, label }) => (
                                         <CommandItem
+                                          className="capitalize"
                                           key={value}
                                           value={label}
                                           onSelect={() => {
                                             form.setValue(
+                                              "stock_status",
+                                              value
+                                            );
+
+                                            handleSpecificationChanges(
+                                              variant.id,
                                               "stock_status",
                                               value
                                             );
@@ -325,203 +392,162 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                     )}
                   </div>
                 </div>
-
-                {/* <div className="grid grid-cols-3 gap-4">
-                  <div className="grid-cols-1">
-                    {isLoading ? (
-                      <Skeleton className="h-10 w-full rounded-md" />
-                    ) : (
-                      <FormItem>
-                        <FormLabel>Product Name</FormLabel>
-                        <Input
-                          type="text"
-                          value={variant.qty}
-                          onChange={(e) =>
-                            handleSpecificationChanges(
-                              variant._id,
-                              "qty",
-                              e.target.value
-                            )
-                          }
-                          className="bg-primary-foreground"
-                          placeholder="Write product name"
-                        />
-                      </FormItem>
-                    )}
-                  </div>
-
-                  <div className="grid-cols-1">
-                    {isLoading ? (
-                      <Skeleton className="h-10 w-full rounded-md" />
-                    ) : (
-                      <FormItem>
-                        <FormLabel>Product Name</FormLabel>
-                        <Input
-                          type="text"
-                          value={variant.qty}
-                          onChange={(e) =>
-                            handleSpecificationChanges(
-                              variant._id,
-                              "qty",
-                              e.target.value
-                            )
-                          }
-                          className="bg-primary-foreground"
-                          placeholder="Write product name"
-                        />
-                      </FormItem>
-                    )}
-                  </div>
-
-                  <div className="grid-cols-1">
-                    {isLoading ? (
-                      <Skeleton className="h-10 w-full rounded-md" />
-                    ) : (
-                      <FormItem>
-                        <FormLabel>Product Name</FormLabel>
-                        <Input
-                          type="text"
-                          value={variant.qty}
-                          onChange={(e) =>
-                            handleSpecificationChanges(
-                              variant._id,
-                              "qty",
-                              e.target.value
-                            )
-                          }
-                          className="bg-primary-foreground"
-                          placeholder="Write product name"
-                        />
-                      </FormItem>
-                    )}
-                  </div>
-                </div> */}
               </div>
             </div>
 
-            {/* bottom area (input fields) */}
-            <div className="grid grid-cols-12 items-end gap-4 my-7">
-              {/* attribute name */}
-              <div className="col-span-3">
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full rounded-md" />
-                ) : (
-                  <FormField
-                    control={form.control}
-                    name="attribute_name"
-                    render={({ field }) => {
-                      return (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>Attribute Name</FormLabel>
-                          <Popover>
-                            {/* trigger */}
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="outline"
-                                  role="combobox"
-                                  className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
-                                >
-                                  {/* selected value */}
-                                  {field.value
-                                    ? field.value
-                                    : "Select an attribute"}
-
-                                  {/* icon */}
-                                  <ChevronsUpDown className="opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-
-                            <PopoverContent className="w-full p-0">
-                              <Command>
-                                {/* search input */}
-                                <CommandInput
-                                  placeholder="Search attribute..."
-                                  className="h-9"
-                                />
-
-                                {/* lists */}
-                                <CommandList>
-                                  <CommandEmpty>
-                                    No attribute found.
-                                  </CommandEmpty>
-
-                                  <CommandGroup>
-                                    {attributesList.map(
-                                      ({ label, _id, attribute_values }) => (
-                                        <CommandItem
-                                          key={_id}
-                                          value={label}
-                                          onSelect={() => {
-                                            form.setValue(
-                                              "attribute_name",
-                                              label
-                                            );
-                                            setAttributeValues(
-                                              attribute_values
-                                            );
-                                          }}
-                                        >
-                                          {label}
-                                          <Check
-                                            className={`ml-auto ${
-                                              _id === field.value
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                            }`}
-                                          />
-                                        </CommandItem>
-                                      )
-                                    )}
-                                  </CommandGroup>
-                                </CommandList>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                )}
-              </div>
-
-              {/* attribute values */}
-              <div className="col-span-7 grow">
-                {isLoading ? (
-                  <Skeleton className="h-10 w-full rounded-md" />
-                ) : (
-                  <FormItem>
-                    <FormLabel>Attribute Values</FormLabel>
-                    <Select
-                      isMulti
-                      closeMenuOnSelect={false}
-                      components={animatedComponents}
-                      options={attributeValues}
-                      defaultValue={null}
-                      styles={customStyles}
-                    />
-                  </FormItem>
-                )}
-              </div>
-
-              <Button variant="outline" className="col-span-1">
-                <CopyPlus />
-              </Button>
-
-              <Button
-                // onClick={() => handleDeleteSection(section._id)}
-                variant="destructive"
-                className="col-span-1"
+            {/* bottom area (sub section) */}
+            {variant.subsections.map((subsection) => (
+              <div
+                key={subsection.id}
+                className="grid grid-cols-12 items-end gap-4 my-7"
               >
-                <Trash2 />
-              </Button>
-            </div>
+                {/* attribute name */}
+                <div className="col-span-3">
+                  {isLoading ? (
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  ) : (
+                    <FormField
+                      control={form.control}
+                      name="attribute_name"
+                      render={({ field }) => {
+                        return (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Attribute Name</FormLabel>
+                            <Popover>
+                              {/* trigger */}
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground"
+                                  >
+                                    {/* selected value */}
+                                    {field.value
+                                      ? field.value
+                                      : "Select an attribute"}
+
+                                    {/* icon */}
+                                    <ChevronsUpDown className="opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+
+                              <PopoverContent className="w-full p-0">
+                                <Command>
+                                  {/* search input */}
+                                  <CommandInput
+                                    placeholder="Search attribute..."
+                                    className="h-9"
+                                  />
+
+                                  {/* lists */}
+                                  <CommandList>
+                                    <CommandEmpty>
+                                      No attribute found.
+                                    </CommandEmpty>
+
+                                    <CommandGroup>
+                                      {attributesList.map(
+                                        ({ label, _id, attribute_values }) => (
+                                          <CommandItem
+                                            key={_id}
+                                            value={label}
+                                            onSelect={() => {
+                                              form.setValue(
+                                                "attribute_name",
+                                                label
+                                              );
+                                              setAttributeValues(
+                                                attribute_values
+                                              );
+                                            }}
+                                          >
+                                            {label}
+                                            <Check
+                                              className={`ml-auto ${
+                                                _id === field.value
+                                                  ? "opacity-100"
+                                                  : "opacity-0"
+                                              }`}
+                                            />
+                                          </CommandItem>
+                                        )
+                                      )}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* attribute values */}
+                <div className="col-span-7 grow">
+                  {isLoading ? (
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  ) : (
+                    <FormItem>
+                      <FormLabel>Attribute Values</FormLabel>
+                      <Select
+                        isMulti
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        options={attributeValues}
+                        defaultValue={null}
+                        styles={customStyles}
+                      />
+                    </FormItem>
+                  )}
+                </div>
+
+                {/* add new sub section button  */}
+                <div className="col-span-1">
+                  {isLoading ? (
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => handleAddSubsection(variant.id)}
+                    >
+                      <CopyPlus />
+                    </Button>
+                  )}
+                </div>
+
+                {/* attribute section remove button */}
+                <div className="col-span-1">
+                  {isLoading ? (
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  ) : (
+                    <Button
+                      onClick={() =>
+                        handleDeleteSubsection(variant.id, subsection.id)
+                      }
+                      disabled={variant.subsections.length === 1}
+                      type="button"
+                      variant="destructive"
+                      className="w-full"
+                    >
+                      <Trash2 />
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         ))}
 
         {/* add variant button */}
-        {isLoading || (
+        {isLoading ? (
+          <Skeleton className="h-10 w-full rounded-md" />
+        ) : (
           <div
             onClick={handleAddVariant}
             className={`bg-primary-foreground p-2 hover:bg-muted cursor-pointer h-10 w-full border-2 border-dashed ${

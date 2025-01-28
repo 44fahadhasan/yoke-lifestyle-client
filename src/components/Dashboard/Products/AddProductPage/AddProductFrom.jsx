@@ -20,10 +20,13 @@ const AddProductFrom = () => {
   ]);
   const [variants, setVariants] = useState([
     {
-      _id: uuidv4(),
-      price: "",
-      qty: "",
-      image: "",
+      id: 1,
+      image_url: "",
+      sku: "",
+      product_quantity: "",
+      product_price: "",
+      stock_status: "",
+      subsections: [{ id: 1, attribute_name: "", attribute_values: "" }],
     },
   ]);
   const [metaData, setMetaData] = useState([]);
@@ -94,7 +97,6 @@ const AddProductFrom = () => {
       setMetaData={setMetaData}
       sectionImage={sectionImage}
       setSectionImage={setSectionImage}
-      isLoading={!true}
       productDescription={productDescription}
       setProductDescription={setProductDescription}
       additionalInformation={additionalInformation}

@@ -148,8 +148,8 @@ const discounts = [
 ];
 
 const stocks = [
-  { value: "In Stock", label: "In Stock" },
-  { value: "Stock Out", label: "Stock Out" },
+  { value: "in stock", label: "in stock" },
+  { value: "stock out", label: "stock out" },
 ];
 
 const customStyles = {
