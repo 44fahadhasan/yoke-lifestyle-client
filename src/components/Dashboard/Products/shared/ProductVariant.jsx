@@ -177,7 +177,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
 
   return (
     <Form {...form}>
-      <div className="grid gap-4">
+      <div className="grid gap-[1px] bg-card">
         {variants.map((variant, idx) => (
           <Accordion
             key={`variant${idx}`}
@@ -186,7 +186,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
             collapsible
             className="w-full"
           >
-            <AccordionItem value="item-1" className="border-b-0 bg-muted p-4">
+            <AccordionItem value="item-1" className="border-b-0 bg-muted">
               {/* accordion trigger button */}
               <AccordionTrigger className="font-semibold hover:no-underline">
                 {/* variant number */}
@@ -520,7 +520,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                               components={animatedComponents}
                               options={attributeValues}
                               styles={customStyles}
-                              defaultValue={null} 
+                              defaultValue={null}
                               onChange={(value) => {
                                 handleSpecificationChanges(
                                   variant.id,
