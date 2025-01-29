@@ -35,8 +35,6 @@ const AddProductFrom = () => {
   const [additionalInformation, setAdditionalInformation] = useState("");
   const [shippingWarranty, setShippingWarranty] = useState("");
 
-  console.log({ variants });
-
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
@@ -64,6 +62,7 @@ const AddProductFrom = () => {
       ...data,
       discount_percentage: Number(data.discount_percentage),
       product_images_url: sectionImage.map(({ image }) => ({ image })),
+      variants,
       meta_info: metaData,
       email: auth.email,
     };
