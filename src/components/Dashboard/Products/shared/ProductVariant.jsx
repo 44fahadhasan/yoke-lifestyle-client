@@ -67,8 +67,8 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
         sku: "",
         product_quantity: "",
         product_price: "",
-        stock_status: "",
-        subsections: [{ id: 1, key: "", value: "" }],
+        stock_status: "in stock",
+        subsections: [{ id: 1, attribute_name: "", attribute_values: [] }],
       },
     ]);
   };

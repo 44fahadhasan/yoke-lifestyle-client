@@ -25,7 +25,7 @@ const AddProductFrom = () => {
       sku: "",
       product_quantity: "",
       product_price: "",
-      stock_status: "",
+      stock_status: "in stock",
       subsections: [{ id: 1, attribute_name: "", attribute_values: [] }],
     },
   ]);
@@ -67,8 +67,6 @@ const AddProductFrom = () => {
       email: auth.email,
     };
 
-    console.log({ payload });
-
     try {
       setLoading(true);
 
@@ -76,6 +74,17 @@ const AddProductFrom = () => {
 
       if (data.success) {
         form.reset();
+        setVariants([
+          {
+            id: 1,
+            image_url: "",
+            sku: "",
+            product_quantity: "",
+            product_price: "",
+            stock_status: "in stock",
+            subsections: [{ id: 1, attribute_name: "", attribute_values: [] }],
+          },
+        ]);
 
         popupToast({
           title: `Great job! ${data.message}`,
