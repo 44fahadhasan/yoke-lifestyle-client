@@ -17,7 +17,7 @@ const VariantsDetails = ({ variants = [] }) => {
       {/* trigger */}
       <DialogTrigger asChild>
         <Button variant="link" className="px-0">
-          View ({variants?.length || 0})
+          View ({variants?.length})
         </Button>
       </DialogTrigger>
 
