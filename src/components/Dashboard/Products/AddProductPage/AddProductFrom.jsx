@@ -74,6 +74,12 @@ const AddProductFrom = () => {
 
       if (data.success) {
         form.reset();
+        setSectionImage([
+          {
+            _id: uuidv4(),
+            image: "",
+          },
+        ]);
         setVariants([
           {
             id: 1,
