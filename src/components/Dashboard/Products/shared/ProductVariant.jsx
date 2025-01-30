@@ -205,7 +205,11 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                 {/* middle area */}
                 <div className="grid grid-cols-3 gap-4">
                   {/* left area (img) */}
-                  <div className="col-span-1 relative p-2 h-full w-full border-2 border-dashed border-primary min-h-36 max-h-min-h-36">
+                  <div
+                    className={`col-span-1 relative h-full w-full ${
+                      isLoading ? "border-none" : "border-2 p-2"
+                    } border-dashed border-primary min-h-36 max-h-min-h-36`}
+                  >
                     {isLoading ? (
                       <Skeleton className="w-full h-full rounded-md" />
                     ) : (
