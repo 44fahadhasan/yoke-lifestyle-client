@@ -5,13 +5,15 @@ import { useToast } from "@/hooks/use-toast";
 import useAuth from "@/hooks/useAuth";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import ProductFrom from "../shared/ProductFrom";
 
-const AddProductFrom = () => {
+const EditProductFrom = () => {
   const [sectionImage, setSectionImage] = useState(() => [
     {
       _id: uuidv4(),
@@ -35,6 +37,7 @@ const AddProductFrom = () => {
   const [additionalInformation, setAdditionalInformation] = useState("");
   const [shippingWarranty, setShippingWarranty] = useState("");
 
+  const { id } = useParams();
   const { auth } = useAuth();
   const { toast: popupToast } = useToast();
   const axiosSecure = useAxiosSecure();
@@ -47,11 +50,60 @@ const AddProductFrom = () => {
       product_category: "",
       product_tag: "",
       product_brand: "",
-      featured_product: "no",
+      featured_product: "",
       product_video_link: "",
-      discount_type: "percentage",
+      discount_type: "",
       discount_percentage: "",
-      status: "published",
+      status: "",
+    },
+  });
+
+  // fetch product
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["product-details-admin", id],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/api/products/details/${id}/admin`
+      );
+
+      const {
+        product_name,
+        product_category,
+        product_tag,
+        product_brand,
+        featured_product,
+        product_video_link,
+        discount_type,
+        discount_percentage,
+        status,
+        product_images_url,
+        variants,
+        product_description,
+        additional_information,
+        shipping_warranty,
+      } = data?.data || {};
+
+      // set default values of form input filed
+      form.reset({
+        product_name,
+        product_category,
+        product_tag,
+        product_brand,
+        featured_product,
+        product_video_link,
+        discount_type,
+        discount_percentage: discount_percentage.toString(),
+        status,
+      });
+
+      setSectionImage(product_images_url);
+      setVariants(variants);
+      setProductDescription(product_description);
+      setAdditionalInformation(additional_information);
+      setShippingWarranty(shipping_warranty);
+      setMetaData(meta_info);
+
+      return data?.data;
     },
   });
 
@@ -73,27 +125,10 @@ const AddProductFrom = () => {
     try {
       setLoading(true);
 
-      const { data } = await axiosSecure.post("/api/products", payload);
+      const { data } = await axiosSecure.put(`/api/products/${id}`, payload);
 
       if (data.success) {
-        form.reset();
-        setSectionImage([
-          {
-            _id: uuidv4(),
-            image: "",
-          },
-        ]);
-        setVariants([
-          {
-            id: 1,
-            image_url: "",
-            sku: "",
-            product_quantity: "",
-            product_price: "",
-            stock_status: "in stock",
-            subsections: [{ id: 1, attribute_name: "", attribute_values: [] }],
-          },
-        ]);
+        refetch();
 
         popupToast({
           title: `Great job! ${data.message}`,
@@ -112,7 +147,9 @@ const AddProductFrom = () => {
     <ProductFrom
       form={form}
       onSubmit={onSubmit}
+      isLoading={isLoading}
       loading={loading}
+      metaData={metaData}
       setMetaData={setMetaData}
       sectionImage={sectionImage}
       setSectionImage={setSectionImage}
@@ -128,4 +165,4 @@ const AddProductFrom = () => {
   );
 };
 
-export default AddProductFrom;
+export default EditProductFrom;

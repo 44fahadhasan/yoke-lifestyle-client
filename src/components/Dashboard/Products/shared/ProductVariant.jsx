@@ -206,36 +206,40 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                 <div className="grid grid-cols-3 gap-4">
                   {/* left area (img) */}
                   <div className="col-span-1 relative p-2 h-full w-full border-2 border-dashed border-primary min-h-36 max-h-min-h-36">
-                    {variant.image_url ? (
-                      <div className="relative h-full w-full">
-                        {/* img preview */}
-                        <Image
-                          src={variant.image_url}
-                          alt="image preview"
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-md"
-                        />
-
-                        {/* img add button */}
-                        <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300">
-                          <ImagePicker
-                            setAddedImageValue={(selectedImage) =>
-                              handleImageSelect(selectedImage, variant.id)
-                            }
-                          />
-                        </div>
-                      </div>
-                    ) : isLoading ? (
+                    {isLoading ? (
                       <Skeleton className="w-full h-full rounded-md" />
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300 h-full">
-                        <ImagePicker
-                          setAddedImageValue={(selectedImage) =>
-                            handleImageSelect(selectedImage, variant.id)
-                          }
-                        />
-                      </div>
+                      <>
+                        {variant.image_url ? (
+                          <div className="relative h-full w-full">
+                            {/* img preview */}
+                            <Image
+                              src={variant.image_url}
+                              alt="image preview"
+                              layout="fill"
+                              objectFit="cover"
+                              className="rounded-md"
+                            />
+
+                            {/* img add button */}
+                            <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300">
+                              <ImagePicker
+                                setAddedImageValue={(selectedImage) =>
+                                  handleImageSelect(selectedImage, variant.id)
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center hover:bg-primary/10 transition-all duration-300 h-full">
+                            <ImagePicker
+                              setAddedImageValue={(selectedImage) =>
+                                handleImageSelect(selectedImage, variant.id)
+                              }
+                            />
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
 
