@@ -1,6 +1,5 @@
 "use client";
 import SEO from "@/components/Dashboard/HelperComponent/SEOManager/SEO";
-import LoadingButton from "@/components/reusable/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import {
@@ -26,17 +25,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { featureds } from "@/data/data";
 import { Check, ChevronsUpDown } from "lucide-react";
+import FormFooter from "../../shared/FormFooter/FormFooter";
 
 const TagFrom = ({
   form,
@@ -303,49 +296,7 @@ const TagFrom = ({
         </CardContent>
 
         {/* submit button & status field */}
-        <CardContent className="flex justify-end items-center gap-4">
-          {/* status */}
-          {isLoading ? (
-            <Skeleton className="h-10 w-1/5 rounded-md" />
-          ) : (
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="published">Published</SelectItem>
-                      <SelectItem value="archived">Archived</SelectItem>
-                      <SelectItem value="draft">Draft</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-          )}
-
-          {/* submit button */}
-          {isLoading ? (
-            <Skeleton className="h-10 w-32 rounded-md" />
-          ) : (
-            <Button
-              disabled={loading}
-              type="submit"
-              className="xs:w-1/5 font-medium"
-            >
-              {loading ? <LoadingButton>Please wait</LoadingButton> : "Submit"}
-            </Button>
-          )}
-        </CardContent>
+        <FormFooter form={form} loading={loading} isLoading={isLoading} />
       </form>
     </Form>
   );
