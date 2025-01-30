@@ -81,6 +81,7 @@ const EditProductFrom = () => {
         product_description,
         additional_information,
         shipping_warranty,
+        meta_info,
       } = data?.data || {};
 
       // set default values of form input filed
