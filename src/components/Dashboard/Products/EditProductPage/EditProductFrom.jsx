@@ -92,7 +92,8 @@ const EditProductFrom = () => {
         featured_product,
         product_video_link,
         discount_type,
-        discount_percentage: discount_percentage.toString(),
+        discount_percentage:
+          discount_type === "direct" ? "" : discount_percentage.toString(),
         status,
       });
 
