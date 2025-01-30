@@ -44,7 +44,7 @@ const animatedComponents = makeAnimated();
 
 const ProductVariant = ({ isLoading, variants, setVariants }) => {
   const [attributeValues, setAttributeValues] = useState([]);
-  const [selectedStock, setSelectedStock] = useState(stocks[0]?.value || "");
+  const [selectedStock, setSelectedStock] = useState(stocks[0]?.value);
 
   const axiosSecure = useAxiosSecure();
 
@@ -345,7 +345,9 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                                   className="w-full flex justify-between bg-primary-foreground hover:bg-primary-foreground capitalize"
                                 >
                                   {/* selected value */}
-                                  {selectedStock || "Select Status"}
+                                  {variant?.stock_status ||
+                                    selectedStock ||
+                                    "Select Status"}
 
                                   {/* icon */}
                                   <ChevronsUpDown className="opacity-50" />
@@ -492,7 +494,7 @@ const ProductVariant = ({ isLoading, variants, setVariants }) => {
                             components={animatedComponents}
                             options={attributeValues}
                             styles={customStyles}
-                            defaultValue={null}
+                            defaultValue={subsection?.attribute_values}
                             onChange={(value) => {
                               handleSpecificationChanges(
                                 variant.id,
